@@ -39,12 +39,12 @@ export default function Customers() {
             return (
               <div 
                 key={index}
-                className="flex items-center gap-5 px-8 py-5 rounded-full bg-white/3 border border-white/10 backdrop-blur-2xl shadow-[0_10px_30px_rgba(0,0,0,0.5)] cursor-default transition-colors hover:bg-white/8"
+                className="flex items-center gap-3 md:gap-5 px-5 md:px-8 py-3 md:py-5 rounded-full bg-white/3 border border-white/10 backdrop-blur-2xl shadow-[0_10px_30px_rgba(0,0,0,0.5)] cursor-default transition-colors hover:bg-white/8"
               >
-                <div className="w-12 h-12 rounded-full bg-black border border-white/20 flex items-center justify-center shadow-inner">
-                  <Icon className="w-5 h-5 text-neutral-300" />
+                <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-black border border-white/20 flex items-center justify-center shadow-inner">
+                  <Icon className="w-4 h-4 md:w-5 md:h-5 text-neutral-300" />
                 </div>
-                <span className="text-xl font-bold text-white tracking-tight pr-2">{item.name}</span>
+                <span className="text-base md:text-xl font-bold text-white tracking-tight pr-1 md:pr-2">{item.name}</span>
               </div>
             );
           })}

@@ -6,14 +6,18 @@ export default function CustomCursor() {
   const [isHovering, setIsHovering] = useState(false);
 
   useEffect(() => {
+    // Only enable custom cursor on non-touch/desktop devices to save performance
+    const isDesktop = window.matchMedia('(min-width: 768px)').matches;
+    if (!isDesktop) return;
+
     const updateMousePosition = (e) => {
       setMousePosition({ x: e.clientX, y: e.clientY });
     };
 
     const handleMouseOver = (e) => {
       if (
-        e.target.tagName.toLowerCase() === 'button' ||
-        e.target.tagName.toLowerCase() === 'a' ||
+        e.target.tagName?.toLowerCase() === 'button' ||
+        e.target.tagName?.toLowerCase() === 'a' ||
         e.target.closest('button') ||
         e.target.closest('a')
       ) {
@@ -34,7 +38,7 @@ export default function CustomCursor() {
 
   return (
     <motion.div
-      className="fixed top-0 left-0 pointer-events-none z-[9999]"
+      className="hidden md:block fixed top-0 left-0 pointer-events-none z-[9999]"
       style={{
         translateX: mousePosition.x - 4, // Offset slightly to align tip to actual mouse
         translateY: mousePosition.y - 4,

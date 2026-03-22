@@ -91,6 +91,7 @@ function ProcessSection({ steps }) {
 // ── Hero ─────────────────────────────────────────────────────────────────────
 
 function HeroSection({ service }) {
+  const isDesktop = window.matchMedia('(min-width: 768px)').matches;
   return (
     <section className="relative min-h-screen flex flex-col items-center justify-center text-center px-6 overflow-hidden">
       <div className="absolute inset-0 pointer-events-none">
@@ -120,17 +121,21 @@ function HeroSection({ service }) {
         <p className="text-base lg:text-lg text-neutral-500 max-w-2xl mx-auto leading-relaxed">
           {service.subtext}
         </p>
+
+        
       </motion.div>
 
-      <motion.div
-        className="absolute bottom-8 left-1/2 -translate-x-1/2"
-        animate={{ y: [0, 8, 0] }}
-        transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-      >
-        <div className="w-6 h-10 rounded-full border border-white/20 flex items-start justify-center pt-2">
-          <div className="w-1 h-3 rounded-full bg-white/40" />
-        </div>
-      </motion.div>
+      {/* Scroll indicator - absolute positioned perfectly center bottom */}
+        {isDesktop && <motion.div
+          className="absolute bottom-8 left-1/2 -translate-x-1/2"
+          animate={{ y: [0, 8, 0] }}
+          transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+        >
+          <div className="w-6 h-10 rounded-full border border-white/20 flex items-start justify-center pt-2">
+            <div className="w-1 h-3 rounded-full bg-white/40" />
+          </div>
+        </motion.div>}
+
     </section>
   );
 }
@@ -288,7 +293,7 @@ function PricingSection({ pricing }) {
 
                     {/* Price */}
                     <div className="relative z-10 mb-6 pb-6 border-b border-white/8">
-                      <p className="text-4xl font-black text-white tracking-tighter leading-none mb-2">{plan.price}</p>
+                      <p className="text-2xl font-black text-white tracking-tighter leading-none mb-2">{plan.price}</p>
                       <p className="text-neutral-500 text-sm leading-relaxed">{plan.description}</p>
                     </div>
 

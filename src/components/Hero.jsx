@@ -26,15 +26,8 @@ export default function Hero() {
       <div className="absolute inset-0 z-0 pointer-events-none">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] h-[80vw] lg:w-[800px] lg:h-[800px] bg-white opacity-[0.03] blur-[150px] rounded-full" />
 
-        {/* Subtle Static and Blinking Stars */}
-        <svg className="absolute inset-0 w-full h-full opacity-60">
-          <filter id="glow">
-            <feGaussianBlur stdDeviation="1.5" result="coloredBlur"/>
-            <feMerge>
-              <feMergeNode in="coloredBlur"/>
-              <feMergeNode in="SourceGraphic"/>
-            </feMerge>
-          </filter>
+        {/* Subtle Static and Blinking Stars - Optimized for Performance */}
+        <svg className="absolute inset-0 w-full h-full opacity-60 pointer-events-none">
           {[...Array(150)].map((_, i) => {
             // Give some stars a specific blinking animation via motion
             return (
@@ -45,27 +38,26 @@ export default function Hero() {
                 r={Math.random() * 1.5 + 0.5}
                 fill="white"
                 initial={{ opacity: Math.random() * 0.8 + 0.2 }}
-                animate={{ 
-                  opacity: Math.random() > 0.5 ? [0.2, 1, 0.2] : Math.random() * 0.8 + 0.2 
+                animate={{
+                  opacity: Math.random() > 0.5 ? [0.2, 1, 0.2] : Math.random() * 0.8 + 0.2
                 }}
                 transition={{
                   duration: Math.random() * 3 + 2,
                   repeat: Infinity,
                   ease: "easeInOut"
                 }}
-                filter={Math.random() > 0.8 ? 'url(#glow)' : ''}
               />
             );
           })}
         </svg>
       </div>
-      
+
       {/* Main Contents */}
       <div className="relative z-10 w-full max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-between gap-16 lg:gap-32">
 
         {/* Left Side: Typography & CTA */}
         <div className="w-full lg:w-1/2 lg:pr-10 text-center lg:text-left flex flex-col items-center lg:items-start pt-10 lg:pt-0">
-          <motion.h1 
+          <motion.h1
             className="text-6xl sm:text-7xl lg:text-[140px] font-extrabold text-white mb-6 lg:mb-8 tracking-tighter leading-none"
             initial={{ opacity: 0, scale: 0.95, y: 30 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -73,8 +65,8 @@ export default function Hero() {
           >
             Debuggers
           </motion.h1>
-          
-          <motion.p 
+
+          <motion.p
             className="text-2xl lg:text-3xl text-neutral-300 font-medium tracking-tight mb-6"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -82,8 +74,8 @@ export default function Hero() {
           >
             Smart Solutions for Growing Businesses.
           </motion.p>
-          
-          <motion.p 
+
+          <motion.p
             className="text-base lg:text-lg text-neutral-500 max-w-xl mx-auto lg:mx-0 leading-relaxed mb-12"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -91,7 +83,7 @@ export default function Hero() {
           >
             We build high-quality software, mobile apps, and cloud systems that are fast and easy to use. Ready for the future, made simple for you.
           </motion.p>
-          
+
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -158,7 +150,7 @@ export default function Hero() {
                 animate={{ opacity: [0.1, 0.4, 0.1], scale: [0.95, 1.05, 0.95] }}
                 transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
               />
-              <div className="flex flex-col items-center z-10" onClick={()=> setShowAllProducts(true)}>
+              <div className="flex flex-col items-center z-10" onClick={() => setShowAllProducts(true)}>
                 <Shield className="w-5 h-5 lg:w-6 lg:h-6 text-white mb-1 opacity-70" />
                 <span className="text-white font-bold tracking-[0.3em] text-[10px] lg:text-xs">OUR</span>
                 <span className="text-white font-bold tracking-[0.2em] text-xs lg:text-sm mt-0.5">PRODUCTS</span>
@@ -215,14 +207,14 @@ export default function Hero() {
 
       {/* Scroll indicator - absolute positioned perfectly center bottom */}
       <motion.div
-              className="absolute bottom-8 left-1/2 -translate-x-1/2"
-              animate={{ y: [0, 8, 0] }}
-              transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-            >
-              <div className="w-6 h-10 rounded-full border border-white/20 flex items-start justify-center pt-2">
-                <div className="w-1 h-3 rounded-full bg-white/40" />
-              </div>
-            </motion.div>
+        className="absolute bottom-8 left-1/2 -translate-x-1/2"
+        animate={{ y: [0, 8, 0] }}
+        transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+      >
+        <div className="w-6 h-10 rounded-full border border-white/20 flex items-start justify-center pt-2">
+          <div className="w-1 h-3 rounded-full bg-white/40" />
+        </div>
+      </motion.div>
 
       {/* Product Detail Overlay */}
       <AnimatePresence>
@@ -309,7 +301,7 @@ export default function Hero() {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: i * 0.07, duration: 0.4 }}
                       className="group flex flex-col gap-3 p-5 rounded-2xl bg-white/3 border border-white/10 hover:border-white/25 hover:bg-white/6 transition-all duration-300 cursor-pointer"
-                      onClick={() => { setShowAllProducts(false);}}
+                      onClick={() => { setShowAllProducts(false); }}
                     >
                       {/* Icon */}
                       <div className="w-11 h-11 rounded-xl bg-black border border-white/10 group-hover:border-white/30 flex items-center justify-center transition-colors duration-300">
