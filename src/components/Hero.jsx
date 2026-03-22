@@ -14,6 +14,7 @@ const products = [
 export default function Hero() {
   const [activeProduct, setActiveProduct] = useState(null);
   const [showAllProducts, setShowAllProducts] = useState(false);
+  const isDesktop = window.matchMedia('(min-width: 768px)').matches;
 
   // Orbit geometry
   const radius = 220;
@@ -206,7 +207,7 @@ export default function Hero() {
       </div>
 
       {/* Scroll indicator - absolute positioned perfectly center bottom */}
-      <motion.div
+      {isDesktop && <motion.div
         className="absolute bottom-8 left-1/2 -translate-x-1/2"
         animate={{ y: [0, 8, 0] }}
         transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
@@ -214,7 +215,7 @@ export default function Hero() {
         <div className="w-6 h-10 rounded-full border border-white/20 flex items-start justify-center pt-2">
           <div className="w-1 h-3 rounded-full bg-white/40" />
         </div>
-      </motion.div>
+      </motion.div>}
 
       {/* Product Detail Overlay */}
       <AnimatePresence>
@@ -223,7 +224,7 @@ export default function Hero() {
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-neutral-950/90 backdrop-blur-2xl border border-white/10 p-10 rounded-3xl max-w-md w-11/12 z-50 shadow-[0_40px_100px_rgba(0,0,0,0.8)] flex flex-col items-center text-center"
+            className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-neutral-950/90 backdrop-blur-2xl border border-white/10 p-6 sm:p-10 rounded-3xl max-w-md w-11/12 max-h-[90vh] overflow-y-auto z-50 shadow-[0_40px_100px_rgba(0,0,0,0.8)] flex flex-col items-center text-center no-scrollbar"
           >
             <button
               onClick={() => setActiveProduct(null)}
@@ -274,7 +275,7 @@ export default function Hero() {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.92, y: 30 }}
               transition={{ type: 'spring', stiffness: 120, damping: 20 }}
-              className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 w-[95vw] max-w-3xl bg-neutral-950/95 backdrop-blur-2xl border border-white/10 rounded-3xl p-8 shadow-[0_40px_100px_rgba(0,0,0,0.9)]"
+              className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 w-[95vw] max-w-3xl max-h-[90vh] overflow-y-auto bg-neutral-950/95 backdrop-blur-2xl border border-white/10 rounded-3xl p-6 sm:p-8 shadow-[0_40px_100px_rgba(0,0,0,0.9)] no-scrollbar"
             >
               {/* Header */}
               <div className="flex items-center justify-between mb-8">

@@ -436,7 +436,7 @@ export default function ServiceDetailPage() {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
-      className="min-h-screen bg-black text-white"
+      className="relative min-h-screen w-full bg-black text-white overflow-x-hidden"
     >
       {/* Main navbar with back button and service name */}
       <Navbar backTo="/" serviceTitle={service.title} />

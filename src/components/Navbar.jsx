@@ -25,6 +25,7 @@ const serviceNavLinks = [
 export default function Navbar({ backTo = null, serviceTitle = null }) {
   const [activeSection, setActiveSection] = useState(backTo ? 'process' : 'hero');
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const isDesktop = window.matchMedia('(min-width: 768px)').matches;
 
   useEffect(() => {
     const links = backTo ? serviceNavLinks : homeNavLinks;
@@ -124,13 +125,15 @@ export default function Navbar({ backTo = null, serviceTitle = null }) {
         </div>
 
         {/* ── RIGHT: service name (service pages) OR Hamburger (mobile) ── */}
-        <div className="flex items-center gap-2">
+        {backTo && <div className='flex items-center gap-2'>
           {serviceTitle && !isMenuOpen && (
             <div className="hidden md:flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 shrink-0">
               <span className="text-white text-sm font-bold tracking-tight">{serviceTitle}</span>
             </div>
           )}
+        </div>}
 
+        {!isDesktop && <div className="flex items-center gap-2">
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             className="flex md:hidden items-center justify-center w-10 h-10 rounded-full bg-white/5 border border-white/10 text-white hover:bg-white/10 transition-all duration-200"
@@ -138,7 +141,7 @@ export default function Navbar({ backTo = null, serviceTitle = null }) {
           >
             {isMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
-        </div>
+        </div>}
       </div>
 
       {/* ── MOBILE MENU OVERLAY ── */}
