@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
+import { useTheme } from '../context/ThemeContext';
 
 export default function CustomCursor() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isHovering, setIsHovering] = useState(false);
+  const { isDark } = useTheme();
 
   useEffect(() => {
-    // Only enable custom cursor on non-touch/desktop devices to save performance
     const isDesktop = window.matchMedia('(min-width: 768px)').matches;
     if (!isDesktop) return;
 
@@ -38,23 +39,21 @@ export default function CustomCursor() {
 
   return (
     <motion.div
-      className="hidden md:block fixed top-0 left-0 pointer-events-none z-[9999]"
+      className="hidden md:block fixed top-0 left-0 pointer-events-none z-10000"
       style={{
-        translateX: mousePosition.x - 4, // Offset slightly to align tip to actual mouse
+        translateX: mousePosition.x - 4,
         translateY: mousePosition.y - 4,
       }}
-      animate={{
-        scale: 1, // Never resize wildly
-        opacity: 1,
-      }}
-      transition={{
-        type: 'tween',
-        ease: 'backOut',
-        duration: 0.1,
-      }}
+      animate={{ scale: 1, opacity: 1 }}
+      transition={{ type: 'tween', ease: 'backOut', duration: 0.1 }}
     >
-      <div className={`transition-all duration-300 transform ${isHovering ? 'scale-80' : 'drop-shadow-[0_0_8px_rgba(255,255,255,0.8)]'}`}>
-        <img src="/rocket2.svg" alt="Cursor" className="w-7 h-7 object-contain pointer-events-none rotate-[-68deg]" />
+      <div className={`transition-all duration-300 transform ${isHovering ? 'scale-80' : isDark ? 'drop-shadow-[0_0_8px_rgba(255,255,255,0.8)]' : 'drop-shadow-[0_0_8px_rgba(0,0,0,0.4)]'}`}>
+        <img
+          src="/rocket2.svg"
+          alt="Cursor"
+          className="w-7 h-7 object-contain pointer-events-none rotate-[-68deg]"
+          style={{ filter: isDark ? 'none' : 'invert(1)' }}
+        />
       </div>
     </motion.div>
   );

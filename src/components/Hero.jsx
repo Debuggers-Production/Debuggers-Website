@@ -1,65 +1,260 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import ReactDOM from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Box, Database, Sparkles, Cloud, Shield, Code2, X } from 'lucide-react';
+import { Box, Database, Sparkles, Cloud, Shield, X, Cpu, Zap } from 'lucide-react';
 
-const products = [
-  { id: 1, name: 'Core Engine', icon: Database, size: 48, desc: 'Central data processing architecture.' },
-  { id: 2, name: 'Cloud Hub', icon: Cloud, size: 56, desc: 'Decentralized cloud infrastructure.' },
-  { id: 3, name: 'Nova AI', icon: Sparkles, size: 64, desc: 'Advanced machine learning integration.' },
-  { id: 4, name: 'Shield Def', icon: Shield, size: 48, desc: 'Enterprise-grade security matrix.' },
-  { id: 5, name: 'App Forge', icon: Box, size: 56, desc: 'Universal platform deployment system.' },
+/** Locks body scroll while a modal is open. */
+function useScrollLock(active) {
+  useEffect(() => {
+    if (!active) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => { document.body.style.overflow = prev; };
+  }, [active]);
+}
 
+// 7 products across 3 rings
+const ring1Products = [
+  { id: 1, name: 'Core Engine', icon: Database, desc: 'Central data processing architecture with real-time sync and multi-tenant support.', color: '#60a5fa', size: 52 },
+  { id: 2, name: 'Shield Def', icon: Shield, desc: 'Enterprise-grade security matrix protecting your systems 24/7.', color: '#34d399', size: 44 },
+];
+const ring2Products = [
+  { id: 3, name: 'Cloud Hub', icon: Cloud, desc: 'Decentralized cloud infrastructure for limitless horizontal scale.', color: '#a78bfa', size: 60 },
+  { id: 4, name: 'Nova AI', icon: Sparkles, desc: 'Advanced machine learning integration that learns your business patterns.', color: '#f472b6', size: 56 },
+  { id: 5, name: 'App Forge', icon: Box, desc: 'Universal platform deployment system with zero-config CI/CD.', color: '#fb923c', size: 52 },
+];
+const ring3Products = [
+  { id: 6, name: 'Neural Core', icon: Cpu, desc: 'High-performance compute fabric powering your AI workloads at scale.', color: '#facc15', size: 48 },
+  { id: 7, name: 'Flash Grid', icon: Zap, desc: 'Ultra-low latency API mesh for sub-10ms global response times.', color: '#2dd4bf', size: 44 },
 ];
 
-export default function Hero() {
+const allProducts = [...ring1Products, ...ring2Products, ...ring3Products];
+
+// Deterministic pseudo-random for stable SSR hydration
+function seededRand(seed) {
+  const x = Math.sin(seed + 1) * 10000;
+  return x - Math.floor(x);
+}
+
+// Pre-generate stable, realistic star data
+const STARS = Array.from({ length: 350 }, (_, i) => {
+  const r1 = seededRand(i * 13);
+  const r2 = seededRand(i * 27);
+  const r3 = seededRand(i * 31);
+  const r4 = seededRand(i * 47);
+
+  // Exponential sizing: mostly tiny stars, a rare few larger ones
+  const sizeMultiplier = Math.pow(r3, 4); 
+  const radius = 0.4 + sizeMultiplier * 1.5; 
+
+  // ~40% of stars blink
+  const isBlinking = r4 > 0.6;
+
+  return {
+    id: i,
+    cx: `${r1 * 100}%`,
+    cy: `${r2 * 100}%`,
+    r: radius,
+    blink: isBlinking,
+    dur: 2 + r1 * 4,        // 2s to 6s
+    baseOpacity: 0.1 + r2 * 0.3, // 0.1 to 0.4 base
+    peakOpacity: 0.5 + r3 * 0.5, // 0.5 to 1.0 peak
+  };
+});
+
+// One orbital ring
+function OrbitRing({ products, radius, duration, counterDuration, glowColor }) {
+  const total = products.length;
+  return (
+    <>
+      {/* The visible orbit path */}
+      <div
+        className="absolute rounded-full border border-dashed border-stone-400/20 dark:border-white/[0.07] pointer-events-none"
+        style={{ width: radius * 2, height: radius * 2 }}
+      />
+
+      {/* Rotating container */}
+      <motion.div
+        className="absolute flex items-center justify-center pointer-events-none"
+        style={{ width: radius * 2, height: radius * 2 }}
+        animate={{ rotate: 360 }}
+        transition={{ duration, repeat: Infinity, ease: 'linear' }}
+      >
+        {products.map((product, index) => {
+          const angle = (index / total) * (2 * Math.PI);
+          const x = Math.cos(angle) * radius - product.size / 2;
+          const y = Math.sin(angle) * radius - product.size / 2;
+          const Icon = product.icon;
+
+          return (
+            <motion.div
+              key={product.id}
+              className="absolute pointer-events-auto"
+              style={{ left: `calc(50% + ${x}px)`, top: `calc(50% + ${y}px)` }}
+              animate={{ rotate: -360 }}
+              transition={{ duration: counterDuration, repeat: Infinity, ease: 'linear' }}
+            >
+              <PlanetOrb product={product} />
+            </motion.div>
+          );
+        })}
+      </motion.div>
+    </>
+  );
+}
+
+function PlanetOrb({ product }) {
+  const [showTip, setShowTip] = useState(false);
   const [activeProduct, setActiveProduct] = useState(null);
+  const Icon = product.icon;
+
+  return (
+    <>
+      <div
+        className="relative flex items-center justify-center rounded-full cursor-pointer group"
+        style={{ width: product.size, height: product.size }}
+        onMouseEnter={() => setShowTip(true)}
+        onMouseLeave={() => setShowTip(false)}
+        onClick={() => setActiveProduct(product)}
+      >
+        {/* Planet glow */}
+        <motion.div
+          className="absolute inset-0 rounded-full opacity-30 blur-md"
+          style={{ background: product.color }}
+          animate={{ scale: [1, 1.3, 1], opacity: [0.25, 0.55, 0.25] }}
+          transition={{ duration: 3 + product.id * 0.4, repeat: Infinity, ease: 'easeInOut' }}
+        />
+        {/* Planet body */}
+        <div
+          className="relative rounded-full flex items-center justify-center border border-white/20 shadow-lg transition-transform duration-300 group-hover:scale-125"
+          style={{
+            width: product.size,
+            height: product.size,
+            background: `radial-gradient(circle at 35% 35%, ${product.color}cc, ${product.color}44)`,
+            boxShadow: `0 0 20px ${product.color}55, inset 0 1px 0 rgba(255,255,255,0.3)`,
+          }}
+        >
+          <Icon className="w-4 h-4 text-white drop-shadow-md" style={{ width: product.size * 0.38, height: product.size * 0.38 }} />
+        </div>
+
+        {/* Tooltip */}
+        <AnimatePresence>
+          {showTip && (
+            <motion.div
+              initial={{ opacity: 0, y: 6, scale: 0.9 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 6, scale: 0.9 }}
+              transition={{ duration: 0.15 }}
+              className="absolute -top-10 left-1/2 -translate-x-1/2 whitespace-nowrap px-3 py-1.5 rounded-full bg-stone-900/90 dark:bg-black/90 text-white text-[10px] font-bold tracking-widest uppercase pointer-events-none z-50 shadow-xl"
+            >
+              {product.name}
+              <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-stone-900/90 dark:bg-black/90 rotate-45" />
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+
+      {/* Planet detail modal — via portal so it always escapes stacking contexts */}
+      {ReactDOM.createPortal(
+        <AnimatePresence>
+          {activeProduct && (
+            <>
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="fixed inset-0 bg-stone-900/40 dark:bg-black/60 backdrop-blur-sm"
+                style={{ zIndex: 9998 }}
+                onClick={() => setActiveProduct(null)}
+              />
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.95, y: 20 }}
+                className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#faf8f5] dark:bg-neutral-950/95 backdrop-blur-2xl border border-stone-200 dark:border-white/10 p-8 sm:p-10 rounded-3xl max-w-md w-11/12 shadow-2xl flex flex-col items-center text-center"
+                style={{ zIndex: 9999 }}
+              >
+                <button
+                  onClick={() => setActiveProduct(null)}
+                  className="absolute top-5 right-5 text-stone-400 dark:text-neutral-500 hover:text-stone-900 dark:hover:text-white transition-colors p-2 bg-stone-100 dark:bg-white/5 hover:bg-stone-200 dark:hover:bg-white/10 rounded-full"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+                <div
+                  className="w-16 h-16 rounded-2xl flex items-center justify-center mb-6"
+                  style={{ background: `${activeProduct.color}22`, border: `1px solid ${activeProduct.color}44` }}
+                >
+                  <activeProduct.icon className="w-8 h-8" style={{ color: activeProduct.color }} />
+                </div>
+                <h3 className="text-2xl font-black text-stone-900 dark:text-white tracking-tight mb-3">{activeProduct.name}</h3>
+                <p className="text-stone-500 dark:text-neutral-400 text-base leading-relaxed mb-8">{activeProduct.desc}</p>
+                <button
+                  className="px-8 py-3 rounded-full font-bold text-sm tracking-wide text-white w-full transition-all duration-300 hover:opacity-90 hover:scale-105"
+                  style={{ background: activeProduct.color }}
+                >
+                  Explore Product
+                </button>
+              </motion.div>
+            </>
+          )}
+        </AnimatePresence>,
+        document.body
+      )}
+    </>
+  );
+}
+
+export default function Hero() {
   const [showAllProducts, setShowAllProducts] = useState(false);
   const isDesktop = window.matchMedia('(min-width: 768px)').matches;
 
-  // Orbit geometry
-  const radius = 220;
-  const total = products.length;
+  // Lock body scroll when either modal is open
+  useScrollLock(showAllProducts);
 
   return (
-    <section className="relative w-full min-h-screen flex flex-col items-center justify-start overflow-hidden bg-black pt-32 lg:pt-50">
+    <section className="relative w-full min-h-screen flex flex-col items-center justify-start overflow-hidden bg-[#f0ede8] dark:bg-black pt-25 lg:pt-35 transition-colors duration-300">
 
-      {/* Refined Deep Space Background */}
+      {/* Background */}
       <div className="absolute inset-0 z-0 pointer-events-none">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] h-[80vw] lg:w-[800px] lg:h-[800px] bg-white opacity-[0.03] blur-[150px] rounded-full" />
+        {/* Warm ambient glow in light mode */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[900px] opacity-[0.18] dark:opacity-[0.04] blur-[180px] rounded-full"
+          style={{ background: 'radial-gradient(circle, #f59e0b 0%, #a78bfa 50%, transparent 80%)' }}
+        />
 
-        {/* Subtle Static and Blinking Stars - Optimized for Performance */}
-        <svg className="absolute inset-0 w-full h-full opacity-60 pointer-events-none">
-          {[...Array(150)].map((_, i) => {
-            // Give some stars a specific blinking animation via motion
-            return (
-              <motion.circle
-                key={i}
-                cx={`${Math.random() * 100}%`}
-                cy={`${Math.random() * 100}%`}
-                r={Math.random() * 1.5 + 0.5}
-                fill="white"
-                initial={{ opacity: Math.random() * 0.8 + 0.2 }}
-                animate={{
-                  opacity: Math.random() > 0.5 ? [0.2, 1, 0.2] : Math.random() * 0.8 + 0.2
-                }}
-                transition={{
-                  duration: Math.random() * 3 + 2,
-                  repeat: Infinity,
-                  ease: "easeInOut"
-                }}
-              />
-            );
-          })}
+        {/* Stars */}
+        <svg className="absolute inset-0 w-full h-full opacity-30 dark:opacity-50 pointer-events-none">
+          {STARS.map((star) => (
+            <motion.circle
+              key={star.id}
+              cx={star.cx}
+              cy={star.cy}
+              r={star.r}
+              className="fill-stone-500 dark:fill-white"
+              initial={{ opacity: star.blink ? 0.3 : 0.1 }}
+              animate={star.blink ? { opacity: [0.1, 0.5, 0.1] } : { opacity: 0.1 }}
+              transition={star.blink ? { duration: star.dur, repeat: Infinity, ease: 'easeInOut' } : {}}
+            />
+          ))}
         </svg>
       </div>
 
       {/* Main Contents */}
-      <div className="relative z-10 w-full max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-between gap-16 lg:gap-32">
+      <div className="relative z-10 w-full max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-between gap-16 lg:gap-12 px-6">
 
         {/* Left Side: Typography & CTA */}
         <div className="w-full lg:w-1/2 lg:pr-10 text-center lg:text-left flex flex-col items-center lg:items-start pt-10 lg:pt-0">
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="mb-5 inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-stone-200/80 dark:bg-white/5 border border-stone-300 dark:border-white/10 text-stone-600 dark:text-neutral-400 text-xs font-bold tracking-widest uppercase"
+          >
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+            Now Accepting New Projects
+          </motion.div>
+
           <motion.h1
-            className="text-6xl sm:text-7xl lg:text-[140px] font-extrabold text-white mb-6 lg:mb-8 tracking-tighter leading-none"
+            className="text-6xl sm:text-7xl lg:text-[130px] font-extrabold text-stone-900 dark:text-white mb-6 lg:mb-8 tracking-tighter leading-none"
             initial={{ opacity: 0, scale: 0.95, y: 30 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
@@ -68,7 +263,7 @@ export default function Hero() {
           </motion.h1>
 
           <motion.p
-            className="text-2xl lg:text-3xl text-neutral-300 font-medium tracking-tight mb-6"
+            className="text-2xl lg:text-3xl text-stone-700 dark:text-neutral-300 font-semibold tracking-tight mb-5"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.4 }}
@@ -77,7 +272,7 @@ export default function Hero() {
           </motion.p>
 
           <motion.p
-            className="text-base lg:text-lg text-neutral-500 max-w-xl mx-auto lg:mx-0 leading-relaxed mb-12"
+            className="text-base lg:text-lg text-stone-500 dark:text-neutral-500 max-w-xl mx-auto lg:mx-0 leading-relaxed mb-6"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.5 }}
@@ -85,243 +280,191 @@ export default function Hero() {
             We build high-quality software, mobile apps, and cloud systems that are fast and easy to use. Ready for the future, made simple for you.
           </motion.p>
 
+          {/* Stats row */}
           <motion.div
+            className="flex items-center gap-8 mb-10 w-full lg:w-auto justify-center lg:justify-start"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, delay: 0.6 }}
+          >
+            {[['50+', 'Projects'], ['6', 'Services'], ['100%', 'Satisfaction']].map(([val, label]) => (
+              <div key={label} className="flex flex-col items-center lg:items-start">
+                <span className="text-2xl font-black text-stone-900 dark:text-white tracking-tight">{val}</span>
+                <span className="text-xs font-semibold text-stone-400 dark:text-neutral-500 tracking-wider uppercase">{label}</span>
+              </div>
+            ))}
+          </motion.div>
+
+          <motion.div
+            className="flex flex-col sm:flex-row items-center gap-4"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.7 }}
           >
             <button
               onClick={() => setShowAllProducts(true)}
-              className="px-10 py-5 rounded-full bg-white text-black text-sm lg:text-base font-semibold tracking-wide hover:bg-neutral-200 hover:scale-105 active:scale-95 transition-all duration-300 shadow-[0_0_40px_rgba(255,255,255,0.2)] hover:shadow-[0_0_50px_rgba(255,255,255,0.4)]"
+              className="px-10 py-4 rounded-full bg-stone-900 dark:bg-white text-white dark:text-black text-sm lg:text-base font-bold tracking-wide hover:bg-stone-700 dark:hover:bg-neutral-200 hover:scale-105 active:scale-95 transition-all duration-300 shadow-[0_0_40px_rgba(28,26,23,0.2)] dark:shadow-[0_0_40px_rgba(255,255,255,0.2)] hover:shadow-[0_0_50px_rgba(28,26,23,0.35)] dark:hover:shadow-[0_0_50px_rgba(255,255,255,0.4)]"
             >
               Discover Our Products
             </button>
+            <a
+              href="#services"
+              onClick={(e) => { e.preventDefault(); document.getElementById('services')?.scrollIntoView({ behavior: 'smooth' }); }}
+              className="px-10 py-4 rounded-full border border-stone-300 dark:border-white/20 text-stone-700 dark:text-white text-sm font-bold hover:bg-stone-900 dark:hover:bg-white hover:text-white dark:hover:text-black hover:border-stone-900 dark:hover:border-white transition-all duration-300"
+            >
+              View Services
+            </a>
           </motion.div>
         </div>
 
-        {/* Right Side: High-Tech Orbit System */}
+        {/* Right Side: Solar System */}
         <motion.div
-          className="w-full lg:w-1/2 flex items-center justify-center relative min-h-[500px] lg:scale-100 scale-75 md:scale-90"
+          className="w-full lg:w-1/2 flex items-center justify-center relative"
+          style={{ height: 620 }}
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1], delay: 0.6 }}
         >
-          {/* SVG Complex Radar/Lock Background */}
-          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-            <motion.svg
-              className="w-[700px] h-[700px] opacity-[0.15]"
-              viewBox="0 0 700 700"
-              animate={{ rotate: 360 }}
-              transition={{ duration: 120, repeat: Infinity, ease: "linear" }}
-            >
-              {/* Added more circles to match the multi-ring system */}
-              <circle cx="350" cy="350" r="300" fill="none" stroke="white" strokeWidth="1" strokeDasharray="2 6" />
-              <circle cx="350" cy="350" r="220" fill="none" stroke="white" strokeWidth="1.5" strokeDasharray="1 12" />
-              <circle cx="350" cy="350" r="140" fill="none" stroke="white" strokeWidth="0.5" strokeDasharray="40 4" />
+          <div className="relative flex items-center justify-center" style={{ width: 580, height: 580 }}>
 
-              {/* Hexagon or geometric inner ring */}
-              <polygon points="350,210 471,280 471,420 350,490 229,420 229,280" fill="none" stroke="white" strokeWidth="0.5" opacity="0.5" />
+            {/* ── Ring 1 (innermost, fast) ── */}
+            <div className="absolute inset-0 flex items-center justify-center">
+              <OrbitRing products={ring1Products} radius={130} duration={18} counterDuration={18} />
+            </div>
 
-              {/* Precision Crosshairs intersecting the orbit */}
-              <line x1="350" y1="15" x2="350" y2="685" stroke="white" strokeWidth="0.5" opacity="0.8" strokeDasharray="4 4" />
-              <line x1="15" y1="350" x2="685" y2="350" stroke="white" strokeWidth="0.5" opacity="0.8" strokeDasharray="4 4" />
-            </motion.svg>
+            {/* ── Ring 2 (middle, medium) ── */}
+            <div className="absolute inset-0 flex items-center justify-center">
+              <OrbitRing products={ring2Products} radius={215} duration={36} counterDuration={36} />
+            </div>
 
-            {/* Counter-rotating dashed security ring */}
-            <motion.div
-              className="absolute w-[600px] h-[600px] rounded-full border border-white/10"
-              style={{ borderStyle: 'dashed', borderWidth: '2px' }}
-              animate={{ rotate: -360 }}
-              transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
-            />
-          </div>
+            {/* ── Ring 3 (outer, slow) ── */}
+            <div className="absolute inset-0 flex items-center justify-center">
+              <OrbitRing products={ring3Products} radius={290} duration={60} counterDuration={60} />
+            </div>
 
-          {/* Secure Core Orb */}
-          <div className="absolute z-10 flex items-center justify-center pointer-events-auto">
-            {/* Outer rotating brackets */}
-            <motion.div
-              className="absolute w-40 h-40 lg:w-48 lg:h-48 border-[3px] border-white text-transparent rounded-full border-t-white/30 border-b-white/30 border-l-transparent border-r-transparent"
-              animate={{ rotate: 360 }}
-              transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
-            />
-
-            <div className="w-28 h-28 lg:w-36 lg:h-36 rounded-full bg-black border border-white/30 flex items-center justify-center relative shadow-[inset_0_0_30px_rgba(255,255,255,0.1),_0_0_50px_rgba(255,255,255,0.05)] backdrop-blur-md cursor-pointer hover:border-white/60 transition-colors duration-300">
+            {/* ── Sun / Center ── */}
+            <div className="absolute z-20 flex items-center justify-center">
+              {/* Outer corona */}
               <motion.div
-                className="absolute inset-0 rounded-full bg-white blur-2xl opacity-20"
-                animate={{ opacity: [0.1, 0.4, 0.1], scale: [0.95, 1.05, 0.95] }}
-                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                className="absolute rounded-full opacity-20 dark:opacity-30"
+                style={{ width: 140, height: 140, background: 'radial-gradient(circle, #fbbf24, #f59e0b, transparent)' }}
+                animate={{ scale: [1, 1.2, 1] }}
+                transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
               />
-              <div className="flex flex-col items-center z-10" onClick={() => setShowAllProducts(true)}>
-                <Shield className="w-5 h-5 lg:w-6 lg:h-6 text-white mb-1 opacity-70" />
-                <span className="text-white font-bold tracking-[0.3em] text-[10px] lg:text-xs">OUR</span>
-                <span className="text-white font-bold tracking-[0.2em] text-xs lg:text-sm mt-0.5">PRODUCTS</span>
+              {/* Inner corona */}
+              <motion.div
+                className="absolute rounded-full"
+                style={{ width: 90, height: 90, background: 'radial-gradient(circle, #fef3c7, #fbbf24 60%, transparent)', opacity: 0.35 }}
+                animate={{ scale: [1, 1.15, 1], rotate: [0, 360] }}
+                transition={{ scale: { duration: 3, repeat: Infinity, ease: 'easeInOut' }, rotate: { duration: 30, repeat: Infinity, ease: 'linear' } }}
+              />
+              {/* Spinning ring around sun */}
+              <motion.div
+                className="absolute rounded-full border-2 border-amber-400/50 dark:border-amber-400/30"
+                style={{ width: 78, height: 78 }}
+                animate={{ rotate: 360 }}
+                transition={{ duration: 8, repeat: Infinity, ease: 'linear' }}
+              />
+              {/* Sun body */}
+              <div
+                className="relative w-16 h-16 rounded-full flex items-center justify-center cursor-pointer"
+                style={{
+                  background: 'radial-gradient(circle at 35% 35%, #fef08a, #f59e0b 60%, #d97706)',
+                  boxShadow: '0 0 30px rgba(251,191,36,0.6), 0 0 60px rgba(251,191,36,0.3), 0 0 100px rgba(251,191,36,0.15), inset 0 2px 0 rgba(255,255,255,0.4)',
+                }}
+                onClick={() => setShowAllProducts(true)}
+              >
+                <div className="flex flex-col items-center select-none">
+                  <span className="text-amber-900 font-black tracking-[0.15em] text-[7px] leading-none">OUR</span>
+                  <span className="text-amber-900 font-black tracking-[0.1em] text-[9px] leading-none mt-0.5">PRODUCTS</span>
+                </div>
               </div>
             </div>
+
           </div>
-
-          {/* Orbiting Elements container */}
-          <motion.div
-            className="absolute w-full h-full flex items-center justify-center pointer-events-none"
-            animate={{ rotate: 360 }}
-            transition={{ duration: 90, repeat: Infinity, ease: "linear" }}
-          >
-            {products.map((product, index) => {
-              const angle = (index / total) * (2 * Math.PI);
-              const x = Math.cos(angle) * radius;
-              const y = Math.sin(angle) * radius;
-              const Icon = product.icon;
-
-              return (
-                <div
-                  key={product.id}
-                  className="absolute pointer-events-auto flex flex-col items-center justify-center"
-                  style={{ transform: `translate(${x}px, ${y}px)` }}
-                >
-                  {/* Counter rotation to keep icons upright */}
-                  <motion.div
-                    animate={{ rotate: -360 }}
-                    transition={{ duration: 90, repeat: Infinity, ease: "linear" }}
-                    className="flex flex-col items-center group cursor-pointer relative"
-                    onClick={() => setActiveProduct(product)}
-                  >
-                    {/* Hover connection line hint */}
-                    <div className="absolute top-1/2 left-1/2 w-[120px] h-[1px] bg-white opacity-0 group-hover:opacity-20 transition-opacity duration-300 pointer-events-none origin-left"
-                      style={{ transform: `rotate(${(angle * 180 / Math.PI) + 180}deg)` }}
-                    />
-
-                    <div className="w-14 h-14 lg:w-16 lg:h-16 rounded-full bg-neutral-950 border border-neutral-700 flex items-center justify-center relative transition-all duration-500 group-hover:bg-white group-hover:border-white shadow-[0_0_20px_rgba(255,255,255,0.05)] group-hover:shadow-[0_0_40px_rgba(255,255,255,0.3)] group-hover:scale-110 z-10">
-                      <Icon className="w-6 h-6 lg:w-7 lg:h-7 text-neutral-300 group-hover:text-black transition-colors duration-500" />
-                    </div>
-
-                    <div className="absolute top-[130%] opacity-0 group-hover:opacity-100 transition-opacity duration-300 px-4 py-1.5 bg-neutral-900/90 backdrop-blur-md border border-white/20 rounded-md whitespace-nowrap pointer-events-none z-20 shadow-[0_10px_30px_rgba(0,0,0,0.5)]">
-                      <span className="text-[10px] lg:text-xs font-bold tracking-widest text-white uppercase">
-                        {product.name}
-                      </span>
-                    </div>
-                  </motion.div>
-                </div>
-              );
-            })}
-          </motion.div>
         </motion.div>
       </div>
 
-      {/* Scroll indicator - absolute positioned perfectly center bottom */}
-      {isDesktop && <motion.div
-        className="absolute bottom-8 left-1/2 -translate-x-1/2"
-        animate={{ y: [0, 8, 0] }}
-        transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-      >
-        <div className="w-6 h-10 rounded-full border border-white/20 flex items-start justify-center pt-2">
-          <div className="w-1 h-3 rounded-full bg-white/40" />
-        </div>
-      </motion.div>}
+      {/* Scroll indicator */}
+      {isDesktop && (
+        <motion.div
+          className="absolute bottom-8 left-1/2 -translate-x-1/2"
+          animate={{ y: [0, 8, 0] }}
+          transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+        >
+          <div className="w-6 h-10 rounded-full border border-stone-300 dark:border-white/20 flex items-start justify-center pt-2">
+            <div className="w-1 h-3 rounded-full bg-stone-400 dark:bg-white/40" />
+          </div>
+        </motion.div>
+      )}
 
-      {/* Product Detail Overlay */}
-      <AnimatePresence>
-        {activeProduct && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95, y: 20 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-neutral-950/90 backdrop-blur-2xl border border-white/10 p-6 sm:p-10 rounded-3xl max-w-md w-11/12 max-h-[90vh] overflow-y-auto z-50 shadow-[0_40px_100px_rgba(0,0,0,0.8)] flex flex-col items-center text-center no-scrollbar"
-          >
-            <button
-              onClick={() => setActiveProduct(null)}
-              className="absolute top-6 right-6 text-neutral-500 hover:text-white transition-colors p-2 bg-white/5 hover:bg-white/10 rounded-full"
-            >
-              <X className="w-5 h-5" />
-            </button>
-            <activeProduct.icon className="w-16 h-16 text-white mb-6" />
-            <h3 className="text-3xl font-bold text-white tracking-tight mb-3">{activeProduct.name}</h3>
-            <p className="text-neutral-400 text-lg leading-relaxed mb-8">{activeProduct.desc}</p>
-            <button className="px-8 py-3 bg-white text-black font-semibold tracking-wide rounded-full hover:scale-105 transition-transform duration-300 w-full">
-              Explore Documentation
-            </button>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Background Modal Dimmer */}
-      <AnimatePresence>
-        {activeProduct && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40"
-            onClick={() => setActiveProduct(null)}
-          />
-        )}
-      </AnimatePresence>
-      {/* ── All Products Modal ─────────────────────────────────────── */}
-      <AnimatePresence>
-        {showAllProducts && (
-          <>
-            {/* Backdrop */}
-            <motion.div
-              key="all-backdrop"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-black/70 backdrop-blur-md z-40"
-              onClick={() => setShowAllProducts(false)}
-            />
-
-            {/* Modal */}
-            <motion.div
-              key="all-modal"
-              initial={{ opacity: 0, scale: 0.92, y: 30 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.92, y: 30 }}
-              transition={{ type: 'spring', stiffness: 120, damping: 20 }}
-              className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 w-[95vw] max-w-3xl max-h-[90vh] overflow-y-auto bg-neutral-950/95 backdrop-blur-2xl border border-white/10 rounded-3xl p-6 sm:p-8 shadow-[0_40px_100px_rgba(0,0,0,0.9)] no-scrollbar"
-            >
-              {/* Header */}
-              <div className="flex items-center justify-between mb-8">
-                <div>
-                  <h2 className="text-2xl font-black text-white tracking-tighter">Our Products</h2>
-                  <p className="text-neutral-500 text-sm mt-1">Everything we've built for you.</p>
+      {/* All Products Modal — portal so it always renders above everything */}
+      {ReactDOM.createPortal(
+        <AnimatePresence>
+          {showAllProducts && (
+            <>
+              <motion.div
+                key="all-backdrop"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="fixed inset-0 bg-stone-900/50 dark:bg-black/70 backdrop-blur-md"
+                style={{ zIndex: 9998 }}
+                onClick={() => setShowAllProducts(false)}
+              />
+              <motion.div
+                key="all-modal"
+                initial={{ opacity: 0, scale: 0.92, y: 30 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.92, y: 30 }}
+                transition={{ type: 'spring', stiffness: 120, damping: 20 }}
+                className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[95vw] max-w-3xl max-h-[90vh] overflow-y-auto bg-[#faf8f5] dark:bg-neutral-950/95 backdrop-blur-2xl border border-stone-200 dark:border-white/10 rounded-3xl p-6 sm:p-8 shadow-2xl"
+                style={{ zIndex: 9999 }}
+              >
+                <div className="flex items-center justify-between mb-8">
+                  <div>
+                    <h2 className="text-2xl font-black text-stone-900 dark:text-white tracking-tighter">Our Products</h2>
+                    <p className="text-stone-400 dark:text-neutral-500 text-sm mt-1">Everything we've built for you.</p>
+                  </div>
+                  <button
+                    onClick={() => setShowAllProducts(false)}
+                    className="w-9 h-9 rounded-full bg-stone-100 dark:bg-white/5 border border-stone-200 dark:border-white/10 flex items-center justify-center text-stone-400 dark:text-neutral-400 hover:text-stone-900 dark:hover:text-white hover:bg-stone-200 dark:hover:bg-white/10 transition-all duration-200"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
                 </div>
-                <button
-                  onClick={() => setShowAllProducts(false)}
-                  className="w-9 h-9 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-neutral-400 hover:text-white hover:bg-white/10 transition-all duration-200"
-                >
-                  <X className="w-4 h-4" />
-                </button>
-              </div>
 
-              {/* Products Grid */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {products.map((product, i) => {
-                  const Icon = product.icon;
-                  return (
-                    <motion.div
-                      key={product.id}
-                      initial={{ opacity: 0, y: 16 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: i * 0.07, duration: 0.4 }}
-                      className="group flex flex-col gap-3 p-5 rounded-2xl bg-white/3 border border-white/10 hover:border-white/25 hover:bg-white/6 transition-all duration-300 cursor-pointer"
-                      onClick={() => { setShowAllProducts(false); }}
-                    >
-                      {/* Icon */}
-                      <div className="w-11 h-11 rounded-xl bg-black border border-white/10 group-hover:border-white/30 flex items-center justify-center transition-colors duration-300">
-                        <Icon className="w-5 h-5 text-white/60 group-hover:text-white transition-colors duration-300" />
-                      </div>
-                      {/* Text */}
-                      <div>
-                        <h3 className="text-white font-bold text-sm tracking-tight mb-1">{product.name}</h3>
-                        <p className="text-neutral-500 text-xs leading-relaxed">{product.desc}</p>
-                      </div>
-                    </motion.div>
-                  );
-                })}
-              </div>
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
-
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {allProducts.map((product, i) => {
+                    const Icon = product.icon;
+                    return (
+                      <motion.div
+                        key={product.id}
+                        initial={{ opacity: 0, y: 16 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: i * 0.06, duration: 0.4 }}
+                        className="group flex flex-col gap-3 p-5 rounded-2xl bg-stone-50 dark:bg-white/3 border border-stone-200 dark:border-white/10 hover:border-stone-300 dark:hover:border-white/25 hover:bg-stone-100 dark:hover:bg-white/6 transition-all duration-300 cursor-pointer"
+                      >
+                        <div
+                          className="w-11 h-11 rounded-xl flex items-center justify-center transition-colors duration-300"
+                          style={{ background: `${product.color}18`, border: `1px solid ${product.color}33` }}
+                        >
+                          <Icon className="w-5 h-5" style={{ color: product.color }} />
+                        </div>
+                        <div>
+                          <h3 className="text-stone-900 dark:text-white font-bold text-sm tracking-tight mb-1">{product.name}</h3>
+                          <p className="text-stone-400 dark:text-neutral-500 text-xs leading-relaxed">{product.desc}</p>
+                        </div>
+                      </motion.div>
+                    );
+                  })}
+                </div>
+              </motion.div>
+            </>
+          )}
+        </AnimatePresence>,
+        document.body
+      )}
     </section>
   );
 }
