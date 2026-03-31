@@ -222,16 +222,16 @@ export default function Hero() {
         />
 
         {/* Stars */}
-        <svg className="absolute inset-0 w-full h-full opacity-30 dark:opacity-50 pointer-events-none">
+        <svg className="absolute inset-0 w-full h-full opacity-60 dark:opacity-100 pointer-events-none">
           {STARS.map((star) => (
             <motion.circle
               key={star.id}
               cx={star.cx}
               cy={star.cy}
               r={star.r}
-              className="fill-stone-500 dark:fill-white"
-              initial={{ opacity: star.blink ? 0.3 : 0.1 }}
-              animate={star.blink ? { opacity: [0.1, 0.5, 0.1] } : { opacity: 0.1 }}
+              className="fill-stone-400 dark:fill-white"
+              initial={{ opacity: star.blink ? star.baseOpacity : star.baseOpacity }}
+              animate={star.blink ? { opacity: [star.baseOpacity, star.peakOpacity, star.baseOpacity] } : { opacity: star.baseOpacity }}
               transition={star.blink ? { duration: star.dur, repeat: Infinity, ease: 'easeInOut' } : {}}
             />
           ))}
