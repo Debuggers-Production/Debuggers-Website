@@ -1,8 +1,13 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   --color-brand-black: #000000;
   --color-brand-white: #ffffff;
+  --color-warm-50:  #f7f4ef;
+  --color-warm-100: #ede8e0;
+  --color-warm-200: #ddd5c8;
   --color-brand-gray-50: #f9fafb;
   --color-brand-gray-100: #f3f4f6;
   --color-brand-gray-200: #e5e7eb;
@@ -16,18 +21,36 @@
 }
 
 :root {
-  color-scheme: dark;
+  color-scheme: light dark;
+  /* Surface tokens for light mode */
+  --surface-base:   #f0ede8;
+  --surface-card:   #faf8f5;
+  --surface-border: #e2ddd6;
+  --surface-muted:  #b8b0a4;
+}
+
+.dark {
+  --surface-base:   #000000;
+  --surface-card:   #0a0a0a;
+  --surface-border: rgba(255,255,255,0.08);
+  --surface-muted:  rgba(255,255,255,0.4);
 }
 
 body {
-  background-color: #000000;
-  color: #ffffff;
+  background-color: var(--surface-base);
+  color: #1c1a17;
   font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   margin: 0;
   padding: 0;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.35s ease, color 0.35s ease;
+}
+
+.dark body {
+  background-color: #000000;
+  color: #ffffff;
 }
 
 * {
@@ -52,3 +75,10 @@ html {
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
 }
+
+/* Warm card base for light mode components */
+.light-card {
+  background-color: var(--surface-card);
+  border-color: var(--surface-border);
+}
+
