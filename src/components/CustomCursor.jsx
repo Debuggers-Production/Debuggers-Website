@@ -39,8 +39,9 @@ export default function CustomCursor() {
 
   return (
     <motion.div
-      className="hidden md:block fixed top-0 left-0 pointer-events-none z-10000"
+      className="hidden md:block fixed top-0 left-0 pointer-events-none"
       style={{
+        zIndex: 999999,
         translateX: mousePosition.x - 4,
         translateY: mousePosition.y - 4,
       }}

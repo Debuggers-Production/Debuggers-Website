@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useLenis } from './hooks/useLenis';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Instagram, Youtube, Linkedin, Github } from 'lucide-react';
@@ -9,7 +10,7 @@ import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import Services from './components/Services';
 import ProblemSolution from './components/ProblemSolution';
-import Team from './components/Team';
+import Testimonials from './components/Testimonials';
 import Customers from './components/Customers';
 import ServiceDetailPage from './pages/ServiceDetailPage';
 
@@ -48,7 +49,7 @@ function HomePage() {
         <div id="services"><Services /></div>
         <div id="problem"><ProblemSolution /></div>
         <div id="customers"><Customers /></div>
-        <div id="team"><Team /></div>
+        <div id="testimonials"><Testimonials /></div>
 
         <footer className="w-full py-16 lg:py-20 border-t border-stone-200 dark:border-white/10 bg-[#e8e4dd] dark:bg-black text-center relative z-10 transition-colors duration-300">
           <div className="max-w-7xl mx-auto px-6 flex flex-col items-center">
@@ -96,6 +97,7 @@ function ServicePage() {
 
 // ── Root App with Router ──────────────────────────────────────────────────
 function App() {
+  useLenis(); // ← buttery smooth scroll, global
   return (
     <ThemeProvider>
       <BrowserRouter>

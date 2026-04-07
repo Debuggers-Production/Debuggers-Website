@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { CheckCircle2, ChevronDown, ChevronUp, Star, Zap, Crown, ArrowRight } from 'lucide-react';
 import { servicesData } from '../data/servicesData';
 import Navbar from '../components/Navbar';
+import ContactModal from '../components/ContactModal';
 
 // ── Visual Roadmap ────────────────────────────────────────────────────────────
 
@@ -481,7 +482,7 @@ const tierConfig = [
   },
 ];
 
-function PricingSection({ pricing }) {
+function PricingSection({ pricing, onBookConsultation }) {
   return (
     <section id="pricing" className="py-28 px-6 border-t border-stone-200 dark:border-white/5 relative overflow-hidden bg-[#f0ede8] dark:bg-black transition-colors duration-300">
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[400px] bg-violet-600/5 blur-[120px] rounded-full pointer-events-none" />
@@ -551,6 +552,7 @@ function PricingSection({ pricing }) {
                   </div>
 
                   <button
+                    onClick={onBookConsultation}
                     className={`w-full py-3.5 rounded-2xl text-sm font-black tracking-wide flex items-center justify-center gap-2 transition-all duration-300 ${isHighlight
                       ? 'bg-violet-600 text-white hover:bg-violet-700 shadow-[0_4px_20px_rgba(139,92,246,0.4)] hover:shadow-[0_4px_30px_rgba(139,92,246,0.6)]'
                       : 'bg-stone-900 text-white hover:bg-stone-800 border border-stone-200'
@@ -619,6 +621,7 @@ function PricingSection({ pricing }) {
                           <motion.button
                             whileHover={{ scale: 1.03 }}
                             whileTap={{ scale: 0.97 }}
+                            onClick={onBookConsultation}
                             className="w-full py-4 rounded-2xl text-sm font-black tracking-wide bg-white text-black flex items-center justify-center gap-2 shadow-[0_0_25px_rgba(255,255,255,0.25)] hover:shadow-[0_0_45px_rgba(255,255,255,0.4)] transition-all duration-300"
                           >
                             {plan.cta} <ArrowRight className="w-4 h-4" />
@@ -627,6 +630,7 @@ function PricingSection({ pricing }) {
                           <motion.button
                             whileHover={{ scale: 1.02 }}
                             whileTap={{ scale: 0.98 }}
+                            onClick={onBookConsultation}
                             className="w-full py-4 rounded-2xl text-sm font-bold tracking-wide border border-white/15 text-neutral-300 hover:text-white hover:border-white/30 hover:bg-white/5 flex items-center justify-center gap-2 transition-all duration-300"
                           >
                             {plan.cta} <ArrowRight className="w-4 h-4" />
@@ -711,6 +715,7 @@ export default function ServiceDetailPage() {
   const { slug } = useParams();
   const navigate = useNavigate();
   const service = servicesData[slug];
+  const [showContact, setShowContact] = useState(false);
 
   if (!service) {
     return (
@@ -741,7 +746,7 @@ export default function ServiceDetailPage() {
         <HeroSection service={service} />
         <ProcessSection steps={service.steps} />
         <FeaturesSection features={service.features} />
-        <PricingSection pricing={service.pricing} />
+        <PricingSection pricing={service.pricing} onBookConsultation={() => setShowContact(true)} />
         <FAQSection faq={service.faq} />
 
         {/* Footer CTA */}
@@ -750,8 +755,11 @@ export default function ServiceDetailPage() {
             <h2 className="text-3xl sm:text-5xl font-black text-stone-900 dark:text-white tracking-tighter mb-6">Ready to Get Started?</h2>
             <p className="text-stone-500 dark:text-neutral-400 text-lg mb-10">Let's talk about your project. No commitment, no pressure.</p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <button className="px-10 py-4 rounded-full bg-stone-900 dark:bg-white text-white dark:text-black text-sm font-bold tracking-wide hover:bg-stone-700 dark:hover:bg-neutral-200 hover:scale-105 transition-all duration-300 shadow-[0_0_40px_rgba(28,26,23,0.15)] dark:shadow-[0_0_40px_rgba(255,255,255,0.15)]">
-                Book a Free Consultation
+              <button
+                onClick={() => setShowContact(true)}
+                className="px-10 py-4 rounded-full bg-stone-900 dark:bg-white text-white dark:text-black text-sm font-bold tracking-wide hover:bg-stone-700 dark:hover:bg-neutral-200 hover:scale-105 transition-all duration-300 shadow-[0_0_40px_rgba(28,26,23,0.15)] dark:shadow-[0_0_40px_rgba(255,255,255,0.15)]"
+              >
+                🚀 Book a Free Consultation
               </button>
               <Link to="/" className="px-10 py-4 rounded-full border border-stone-300 dark:border-white/20 text-stone-700 dark:text-white text-sm font-bold hover:bg-stone-100 dark:hover:bg-white/10 transition-all duration-300">
                 Explore All Services
@@ -760,6 +768,13 @@ export default function ServiceDetailPage() {
           </div>
         </section>
       </div>
+
+      {/* ── Space Contact Modal ── */}
+      <ContactModal
+        isOpen={showContact}
+        onClose={() => setShowContact(false)}
+        preselectedService={slug}
+      />
     </motion.div>
   );
 }

@@ -144,7 +144,7 @@ export default function Services() {
 
                   {/* Top row: icon + tag */}
                   <div className="relative z-10 flex items-start justify-between">
-                    <div className={`w-13 h-13 rounded-2xl bg-stone-100 dark:bg-black border border-stone-200 dark:border-white/15 flex items-center justify-center group-hover:border-stone-300 dark:group-hover:border-white/40 transition-colors duration-500`} style={{width:'52px',height:'52px'}}>
+                    <div className={`w-13 h-13 rounded-2xl bg-stone-100 dark:bg-black border border-stone-200 dark:border-white/15 flex items-center justify-center group-hover:border-stone-300 dark:group-hover:border-white/40 transition-colors duration-500`} style={{ width: '52px', height: '52px' }}>
                       <Icon className={`w-6 h-6 ${service.iconColor}`} />
                     </div>
                     <span className="px-3 py-1 rounded-full text-[10px] font-black tracking-widest uppercase text-stone-500 dark:text-neutral-500 bg-stone-100 dark:bg-white/5 border border-stone-200 dark:border-white/10">

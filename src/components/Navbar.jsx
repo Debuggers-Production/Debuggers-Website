@@ -10,7 +10,7 @@ const homeNavLinks = [
   { name: 'Services', href: '#services' },
   { name: 'Architecture', href: '#problem' },
   { name: 'Customers', href: '#customers' },
-  { name: 'Team', href: '#team' },
+  { name: 'Reviews', href: '#testimonials' },
 ];
 
 // Service-detail-page section links

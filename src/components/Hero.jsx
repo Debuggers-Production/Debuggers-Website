@@ -44,8 +44,8 @@ const STARS = Array.from({ length: 350 }, (_, i) => {
   const r4 = seededRand(i * 47);
 
   // Exponential sizing: mostly tiny stars, a rare few larger ones
-  const sizeMultiplier = Math.pow(r3, 4); 
-  const radius = 0.4 + sizeMultiplier * 1.5; 
+  const sizeMultiplier = Math.pow(r3, 4);
+  const radius = 0.4 + sizeMultiplier * 1.5;
 
   // ~40% of stars blink
   const isBlinking = r4 > 0.6;
