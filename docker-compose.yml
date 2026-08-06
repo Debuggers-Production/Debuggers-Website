@@ -1,0 +1,16 @@
+services:
+  debuggerstech-site:
+    image: sivarajan001/debuggerstech-site
+    container_name: debuggerstech-site
+
+    restart: unless-stopped
+
+    ports:
+      - "93:80"
+
+    env_file:
+      - ./debuggerstech_site/.env
+
+    volumes:
+      - ./debuggerstech_site/logs:/app/logs
+
