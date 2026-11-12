@@ -2,56 +2,44 @@ import React, { useState, useEffect, useRef, useCallback, memo } from 'react';
 import { motion, AnimatePresence, useInView } from 'framer-motion';
 import {
   Star, Quote, ChevronLeft, ChevronRight,
-  Building2, ShoppingBag, HeartPulse, GraduationCap, Cpu, Truck,
+  Building2, ShoppingBag, HeartPulse, GraduationCap, Cpu, Truck, Cloud,
   TrendingUp, Clock, Users, Award,
 } from 'lucide-react';
-import { div } from 'framer-motion/client';
+import { useTheme } from '../context/ThemeContext';
 
 /* ─── Data ─────────────────────────────────────────────────────────────────── */
 const testimonials = [
   {
-    id: 1, name: 'Arjun Mehta', role: 'CTO', company: 'FinVault Technologies',
-    Icon: Building2, color: '#60a5fa',
-    quote: "Debuggers completely transformed our legacy banking dashboard into a lightning-fast, modern platform. Their technical depth is unlike anything I've seen from an agency — delivery was ahead of schedule.",
-    metric: '3×', metricLabel: 'speed boost',
+    id: 1, name: 'Vexatech', role: 'Founder', company: 'Vexatech.in',
+    Icon: Building2, color: '#60a5fa', darkColor: '#1d4ed8',
+    quote: "Working with Debuggers Technologies on our web architecture, backend systems, and server management was seamless. Their code quality, attention to performance, and proactive maintenance helped us scale reliably with confidence.",
+    metric: 'Vexatech.in', metricLabel: 'Web, Backend & Server Management',
   },
   {
-    id: 2, name: 'Priya Nair', role: 'Founder & CEO', company: 'CartZen',
-    Icon: ShoppingBag, color: '#34d399',
-    quote: "We went from idea to a fully-deployed mobile app in just 6 weeks. The UI is gorgeous, customers keep complimenting it, and conversions jumped 40% after launch. Highly recommend for any product startup.",
-    metric: '40%', metricLabel: 'more conversions',
+    id: 2, name: 'Antaris Softwares', role: 'Founder', company: 'Inventq.in',
+    Icon: Cpu, color: '#34d399', darkColor: '#047857',
+    quote: "Debuggers Technologies built the full Inventq.in software ecosystem from the ground up—including the frontend web platform, backend APIs, and mobile application. Their end-to-end execution and performance delivered a complete product our users love.",
+    metric: 'Inventq.in', metricLabel: 'Full Software: Web, Mobile App & APIs',
   },
   {
-    id: 3, name: 'Dr. Kavitha Rajan', role: 'Director of Engineering', company: 'MedChain Health',
-    Icon: HeartPulse, color: '#f87171',
-    quote: "Security and compliance were non-negotiable for us. Debuggers delivered HIPAA-ready infrastructure with zero vulnerabilities. Their DevOps pipeline is world-class and our uptime has been flawless.",
-    metric: '99.99%', metricLabel: 'uptime',
-  },
-  {
-    id: 4, name: 'Rohan Sharma', role: 'Product Lead', company: 'EduPulse Academy',
-    Icon: GraduationCap, color: '#fbbf24',
-    quote: "Our LMS needed a complete AI-powered overhaul. Debuggers integrated GPT-based personalization and rebuilt the entire frontend in React. Student engagement went through the roof.",
-    metric: '68%', metricLabel: 'engagement gain',
-  },
-  {
-    id: 5, name: 'Sneha Pillai', role: 'Head of Digital', company: 'LogixPro',
-    Icon: Truck, color: '#a78bfa',
-    quote: "The real-time fleet tracking dashboard they built handles 10,000+ concurrent vehicles without breaking a sweat. The WebSocket architecture is brilliant, and the UI is so clean our drivers figured it out on day one.",
-    metric: '10K+', metricLabel: 'live vehicles',
-  },
-  {
-    id: 6, name: 'Vikram Anand', role: 'Co-Founder', company: 'NeuralLabs',
-    Icon: Cpu, color: '#e879f9',
-    quote: "We needed an AI product built fast with a premium feel. Debuggers nailed both — a sleek frontend, a robust Python API, and RAG-powered search all shipped in 8 weeks. Our investors were blown away.",
-    metric: '8wk', metricLabel: 'from idea to launch',
+    id: 3,
+    name: 'NexSkill Advisory',
+    role: 'Founder',
+    company: 'Powered by Waay2Tech',
+    Icon: Cloud,
+    color: '#38bdf8',
+    darkColor: '#0369a1',
+    quote: "Debuggers Technologies architected and built our entire cloud infrastructure from the ground up. Their implementation gave us rock-solid scalability, automated CI/CD pipelines, and high-performance cloud security.",
+    metric: 'Cloud Infra',
+    metricLabel: 'Architecture & DevOps',
   },
 ];
 
 const STATS = [
-  { icon: TrendingUp, value: '50+',  label: 'Projects delivered', color: '#60a5fa' },
+  { icon: TrendingUp, value: '10+',  label: 'Projects delivered', color: '#60a5fa' },
   { icon: Award,      value: '5.0',  label: 'Average rating',     color: '#fbbf24' },
   { icon: Users,      value: '100%', label: 'Client retention',   color: '#34d399' },
-  { icon: Clock,      value: '<48h', label: 'First response',     color: '#a78bfa' },
+  { icon: Clock,      value: '<7hrs', label: 'First response',     color: '#a78bfa' },
 ];
 
 /* ─── Stat item — only animates once on scroll-into-view ────────────────────── */
@@ -80,7 +68,9 @@ const StatItem = memo(function StatItem({ value, label, icon: Icon, color, delay
 
 /* ─── Card — GPU-only transforms, NO filter/blur/boxShadow animations ─────── */
 const TestimonialCard = memo(function TestimonialCard({ t, isCenter, onClick }) {
+  const { isDark } = useTheme();
   const Icon = t.Icon;
+  const pillTextColor = isDark ? t.color : (t.darkColor || t.color);
 
   return (
     <motion.div
@@ -98,8 +88,8 @@ const TestimonialCard = memo(function TestimonialCard({ t, isCenter, onClick }) 
       }}
       className={`relative flex-1 min-w-0 rounded-3xl flex flex-col gap-4 border p-6 ${
         isCenter
-          ? 'bg-white dark:bg-white/[0.04] border-stone-200 dark:border-white/10 shadow-[0_12px_40px_rgba(28,26,23,0.1)] dark:shadow-[0_12px_40px_rgba(0,0,0,0.65)]'
-          : 'bg-stone-50/70 dark:bg-white/[0.018] border-stone-100 dark:border-white/5 hidden md:flex'
+          ? 'bg-white/95 dark:bg-white/[0.04] border-slate-300/80 dark:border-white/10 shadow-[0_12px_40px_rgba(15,23,42,0.08)] dark:shadow-[0_12px_40px_rgba(0,0,0,0.65)]'
+          : 'bg-white/60 dark:bg-white/[0.018] border-slate-200/80 dark:border-white/5 hidden md:flex'
       }`}
     >
       {/* Accent top bar — CSS only, no animation */}
@@ -126,19 +116,22 @@ const TestimonialCard = memo(function TestimonialCard({ t, isCenter, onClick }) 
         "{t.quote}"
       </p>
 
-      {/* Metric pill — CSS transition, no AnimatePresence */}
+      {/* Metric pill — high-contrast crisp text in light and dark mode */}
       <div
-        className="flex items-center gap-2 px-3 py-1.5 rounded-full self-start transition-opacity duration-300"
+        className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full self-start transition-opacity duration-300"
         style={{
-          background: `${t.color}14`,
-          border: `1px solid ${t.color}38`,
+          background: isDark ? `${t.color}18` : `${t.darkColor || t.color}12`,
+          border: `1px solid ${isDark ? `${t.color}45` : `${t.darkColor || t.color}40`}`,
           opacity: isCenter ? 1 : 0,
         }}
       >
-        {/* Static dot — no animation */}
-        <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: t.color }} />
-        <span className="text-xs font-black tracking-wide" style={{ color: t.color }}>
-          {t.metric} <span className="font-medium opacity-70">{t.metricLabel}</span>
+        <span
+          className="text-xs tracking-tight"
+          style={{ color: pillTextColor }}
+        >
+          <span className="font-extrabold">{t.metric}</span>
+          <span className="mx-1.5 opacity-40">·</span>
+          <span className="font-semibold">{t.metricLabel}</span>
         </span>
       </div>
 
@@ -205,7 +198,7 @@ export default function Testimonials() {
       ref={sectionRef}
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
-      className="w-full py-20 sm:py-28 bg-[#f0ede8] dark:bg-black border-t border-stone-200 dark:border-white/5 relative overflow-hidden transition-colors duration-300"
+      className="w-full py-20 sm:py-28 bg-[#eaedf2] dark:bg-black border-t border-slate-300/70 dark:border-white/5 relative overflow-hidden transition-colors duration-300"
     >
       {/* Static ambient gradient — NO animation, just CSS */}
       <div
@@ -221,10 +214,8 @@ export default function Testimonials() {
             initial={{ opacity: 0, y: 16 }}
             animate={titleInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
-            className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-stone-200 dark:bg-white/5 border border-stone-300 dark:border-white/10 text-stone-500 dark:text-neutral-500 text-xs font-bold tracking-widest uppercase mb-5"
+            className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-300/60 dark:bg-white/5 border border-slate-300 dark:border-white/10 text-slate-600 dark:text-neutral-400 text-xs font-bold tracking-widest uppercase mb-5"
           >
-            {/* Static pulsing dot via CSS animation */}
-            <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: '#7c3aed' }} />
             Client Stories
           </motion.div>
 
@@ -232,7 +223,7 @@ export default function Testimonials() {
             initial={{ opacity: 0, y: 22 }}
             animate={titleInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.7, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
-            className="text-3xl md:text-5xl font-extrabold text-stone-900 dark:text-white tracking-tight mb-4"
+            className="text-3xl md:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight mb-4"
           >
             Trusted by Builders{' '}
             <span className="relative inline-block">
@@ -251,7 +242,7 @@ export default function Testimonials() {
             initial={{ opacity: 0, y: 16 }}
             animate={titleInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.6, delay: 0.15 }}
-            className="text-stone-500 dark:text-neutral-400 text-lg font-light max-w-lg mx-auto"
+            className="text-slate-600 dark:text-neutral-400 text-lg font-light max-w-lg mx-auto"
           >
             Real results from companies that chose to build with Debuggers.
           </motion.p>

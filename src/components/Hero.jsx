@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Box, Database, Sparkles, Cloud, Shield, X, Cpu, Zap } from 'lucide-react';
+import { X, Store, ExternalLink } from 'lucide-react';
 
 /** Locks body scroll while a modal is open. */
 function useScrollLock(active) {
@@ -13,19 +13,52 @@ function useScrollLock(active) {
   }, [active]);
 }
 
-// 7 products across 3 rings
+// 4 live & upcoming products across 3 rings
 const ring1Products = [
-  { id: 1, name: 'Core Engine', icon: Database, desc: 'Central data processing architecture with real-time sync and multi-tenant support.', color: '#60a5fa', size: 52 },
-  { id: 2, name: 'Shield Def', icon: Shield, desc: 'Enterprise-grade security matrix protecting your systems 24/7.', color: '#34d399', size: 44 },
+  {
+    id: 1,
+    name: 'MenuKit',
+    logo: '/products/menukit-icon.png',
+    status: 'Live',
+    url: 'https://debuggerstechnologies.com/menukit/',
+    desc: 'Digital QR menu and smart ordering platform for restaurants and cafes—instant menu updates, zero printing costs, and effortless table ordering.',
+    color: '#ff6b00',
+    size: 56,
+  },
+  {
+    id: 2,
+    name: 'Dauth',
+    logo: '/products/dauth-icon.png',
+    status: 'Live',
+    url: 'https://dauth.debuggerstechnologies.com',
+    desc: 'Unified authentication and identity platform with zero-friction sign-in, session management, and enterprise-grade access control.',
+    color: '#00d4ff',
+    size: 54,
+  },
 ];
 const ring2Products = [
-  { id: 3, name: 'Cloud Hub', icon: Cloud, desc: 'Decentralized cloud infrastructure for limitless horizontal scale.', color: '#a78bfa', size: 60 },
-  { id: 4, name: 'Nova AI', icon: Sparkles, desc: 'Advanced machine learning integration that learns your business patterns.', color: '#f472b6', size: 56 },
-  { id: 5, name: 'App Forge', icon: Box, desc: 'Universal platform deployment system with zero-config CI/CD.', color: '#fb923c', size: 52 },
+  {
+    id: 3,
+    name: 'Dwise',
+    logo: '/products/dwise-icon.png',
+    status: 'Coming Soon',
+    url: null,
+    desc: 'Smart spend & bill tracker where all your shop receipts and invoices arrive automatically in one place—no more WhatsApp bill spam. Ask AI "What did I buy yesterday?" or "What can I cook with it?"',
+    color: '#10b981',
+    size: 58,
+  },
 ];
 const ring3Products = [
-  { id: 6, name: 'Neural Core', icon: Cpu, desc: 'High-performance compute fabric powering your AI workloads at scale.', color: '#facc15', size: 48 },
-  { id: 7, name: 'Flash Grid', icon: Zap, desc: 'Ultra-low latency API mesh for sub-10ms global response times.', color: '#2dd4bf', size: 44 },
+  {
+    id: 4,
+    name: 'Subakarya',
+    icon: Store,
+    status: 'Coming Soon',
+    url: null,
+    desc: 'All your business in one platform—manage booking-based or order-based services while posting reels and stories on a built-in social feed. No separate website needed, with automatic SEO to bring customers to you.',
+    color: '#8b5cf6',
+    size: 56,
+  },
 ];
 
 const allProducts = [...ring1Products, ...ring2Products, ...ring3Products];
@@ -36,34 +69,27 @@ function seededRand(seed) {
   return x - Math.floor(x);
 }
 
-// Pre-generate stable, realistic star data
-const STARS = Array.from({ length: 350 }, (_, i) => {
+// Pre-generate stable, realistic star data (optimized count for 60/120fps scrolling)
+const STARS = Array.from({ length: 65 }, (_, i) => {
   const r1 = seededRand(i * 13);
   const r2 = seededRand(i * 27);
   const r3 = seededRand(i * 31);
-  const r4 = seededRand(i * 47);
 
-  // Exponential sizing: mostly tiny stars, a rare few larger ones
+  // Exponential sizing: mostly tiny stars
   const sizeMultiplier = Math.pow(r3, 4);
-  const radius = 0.4 + sizeMultiplier * 1.5;
-
-  // ~40% of stars blink
-  const isBlinking = r4 > 0.6;
+  const radius = 0.5 + sizeMultiplier * 1.4;
 
   return {
     id: i,
-    cx: `${r1 * 100}%`,
-    cy: `${r2 * 100}%`,
+    cx: `${(r1 * 100).toFixed(2)}%`,
+    cy: `${(r2 * 100).toFixed(2)}%`,
     r: radius,
-    blink: isBlinking,
-    dur: 2 + r1 * 4,        // 2s to 6s
-    baseOpacity: 0.1 + r2 * 0.3, // 0.1 to 0.4 base
-    peakOpacity: 0.5 + r3 * 0.5, // 0.5 to 1.0 peak
+    baseOpacity: (0.15 + r2 * 0.35).toFixed(2),
   };
 });
 
-// One orbital ring
-function OrbitRing({ products, radius, duration, counterDuration, glowColor }) {
+// One orbital ring (GPU-accelerated CSS rotation for lag-free scrolling)
+function OrbitRing({ products, radius, duration, counterDuration, glowColor, onHoverProduct }) {
   const total = products.length;
   return (
     <>
@@ -73,37 +99,42 @@ function OrbitRing({ products, radius, duration, counterDuration, glowColor }) {
         style={{ width: radius * 2, height: radius * 2 }}
       />
 
-      {/* Rotating container */}
-      <motion.div
+      {/* Rotating container with compositor-thread animation */}
+      <div
         className="absolute flex items-center justify-center pointer-events-none"
-        style={{ width: radius * 2, height: radius * 2 }}
-        animate={{ rotate: 360 }}
-        transition={{ duration, repeat: Infinity, ease: 'linear' }}
+        style={{
+          width: radius * 2,
+          height: radius * 2,
+          animation: `heroSpin ${duration}s linear infinite`,
+          willChange: 'transform',
+        }}
       >
         {products.map((product, index) => {
           const angle = (index / total) * (2 * Math.PI);
           const x = Math.cos(angle) * radius - product.size / 2;
           const y = Math.sin(angle) * radius - product.size / 2;
-          const Icon = product.icon;
 
           return (
-            <motion.div
+            <div
               key={product.id}
               className="absolute pointer-events-auto"
-              style={{ left: `calc(50% + ${x}px)`, top: `calc(50% + ${y}px)` }}
-              animate={{ rotate: -360 }}
-              transition={{ duration: counterDuration, repeat: Infinity, ease: 'linear' }}
+              style={{
+                left: `calc(50% + ${x}px)`,
+                top: `calc(50% + ${y}px)`,
+                animation: `heroCounterSpin ${counterDuration}s linear infinite`,
+                willChange: 'transform',
+              }}
             >
-              <PlanetOrb product={product} />
-            </motion.div>
+              <PlanetOrb product={product} onHoverProduct={onHoverProduct} />
+            </div>
           );
         })}
-      </motion.div>
+      </div>
     </>
   );
 }
 
-function PlanetOrb({ product }) {
+function PlanetOrb({ product, onHoverProduct }) {
   const [showTip, setShowTip] = useState(false);
   const [activeProduct, setActiveProduct] = useState(null);
   const Icon = product.icon;
@@ -113,28 +144,37 @@ function PlanetOrb({ product }) {
       <div
         className="relative flex items-center justify-center rounded-full cursor-pointer group"
         style={{ width: product.size, height: product.size }}
-        onMouseEnter={() => setShowTip(true)}
-        onMouseLeave={() => setShowTip(false)}
+        onMouseEnter={() => { setShowTip(true); onHoverProduct?.(product.color); }}
+        onMouseLeave={() => { setShowTip(false); onHoverProduct?.(null); }}
         onClick={() => setActiveProduct(product)}
       >
         {/* Planet glow */}
-        <motion.div
-          className="absolute inset-0 rounded-full opacity-30 blur-md"
+        <div
+          className="absolute inset-0 rounded-full opacity-40 blur-md pointer-events-none transition-transform duration-300 group-hover:scale-125"
           style={{ background: product.color }}
-          animate={{ scale: [1, 1.3, 1], opacity: [0.25, 0.55, 0.25] }}
-          transition={{ duration: 3 + product.id * 0.4, repeat: Infinity, ease: 'easeInOut' }}
         />
         {/* Planet body */}
         <div
-          className="relative rounded-full flex items-center justify-center border border-white/20 shadow-lg transition-transform duration-300 group-hover:scale-125"
+          className="relative rounded-full flex items-center justify-center border border-white/25 shadow-lg transition-transform duration-300 group-hover:scale-125 bg-white/90 dark:bg-neutral-950/90"
           style={{
             width: product.size,
             height: product.size,
-            background: `radial-gradient(circle at 35% 35%, ${product.color}cc, ${product.color}44)`,
             boxShadow: `0 0 20px ${product.color}55, inset 0 1px 0 rgba(255,255,255,0.3)`,
           }}
         >
-          <Icon className="w-4 h-4 text-white drop-shadow-md" style={{ width: product.size * 0.38, height: product.size * 0.38 }} />
+          {product.logo ? (
+            <img
+              src={product.logo}
+              alt={product.name}
+              width={Math.round(product.size * 0.6)}
+              height={Math.round(product.size * 0.6)}
+              decoding="async"
+              className="object-contain drop-shadow-sm"
+              style={{ width: product.size * 0.6, height: product.size * 0.6 }}
+            />
+          ) : (
+            <Icon className="drop-shadow-md" style={{ width: product.size * 0.42, height: product.size * 0.42, color: product.color }} />
+          )}
         </div>
 
         {/* Tooltip */}
@@ -181,19 +221,41 @@ function PlanetOrb({ product }) {
                   <X className="w-4 h-4" />
                 </button>
                 <div
-                  className="w-16 h-16 rounded-2xl flex items-center justify-center mb-6"
-                  style={{ background: `${activeProduct.color}22`, border: `1px solid ${activeProduct.color}44` }}
+                  className="w-16 h-16 rounded-2xl flex items-center justify-center mb-5"
+                  style={{ background: `${activeProduct.color}18`, border: `1px solid ${activeProduct.color}44` }}
                 >
-                  <activeProduct.icon className="w-8 h-8" style={{ color: activeProduct.color }} />
+                  {activeProduct.logo ? (
+                    <img src={activeProduct.logo} alt={activeProduct.name} width="40" height="40" decoding="async" className="w-10 h-10 object-contain" />
+                  ) : (
+                    <activeProduct.icon className="w-8 h-8" style={{ color: activeProduct.color }} />
+                  )}
                 </div>
-                <h3 className="text-2xl font-black text-stone-900 dark:text-white tracking-tight mb-3">{activeProduct.name}</h3>
-                <p className="text-stone-500 dark:text-neutral-400 text-base leading-relaxed mb-8">{activeProduct.desc}</p>
-                <button
-                  className="px-8 py-3 rounded-full font-bold text-sm tracking-wide text-white w-full transition-all duration-300 hover:opacity-90 hover:scale-105"
-                  style={{ background: activeProduct.color }}
+                <span
+                  className={`px-3 py-1 rounded-full text-[10px] font-bold tracking-widest uppercase mb-3 ${
+                    activeProduct.status === 'Live'
+                      ? 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30'
+                      : 'bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/30'
+                  }`}
                 >
-                  Explore Product
-                </button>
+                  {activeProduct.status}
+                </span>
+                <h3 className="text-2xl font-black text-stone-900 dark:text-white tracking-tight mb-3">{activeProduct.name}</h3>
+                <p className="text-stone-500 dark:text-neutral-400 text-sm sm:text-base leading-relaxed mb-8">{activeProduct.desc}</p>
+                {activeProduct.url ? (
+                  <a
+                    href={activeProduct.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center justify-center gap-2 px-8 py-3 rounded-full font-bold text-sm tracking-wide text-white w-full transition-all duration-300 hover:opacity-90 hover:scale-105"
+                    style={{ background: activeProduct.color }}
+                  >
+                    Visit Live Product <ExternalLink className="w-4 h-4" />
+                  </a>
+                ) : (
+                  <span className="inline-flex items-center justify-center px-8 py-3 rounded-full font-bold text-sm tracking-wide text-stone-500 dark:text-neutral-400 bg-stone-200 dark:bg-white/10 w-full cursor-default">
+                    Coming Soon
+                  </span>
+                )}
               </motion.div>
             </>
           )}
@@ -206,7 +268,19 @@ function PlanetOrb({ product }) {
 
 export default function Hero() {
   const [showAllProducts, setShowAllProducts] = useState(false);
+  const [hoveredColor, setHoveredColor] = useState(null);
+  const [colorIndex, setColorIndex] = useState(0);
   const isDesktop = window.matchMedia('(min-width: 768px)').matches;
+
+  // Cycle hero background glow through product colors every 2 seconds
+  useEffect(() => {
+    const id = setInterval(() => {
+      setColorIndex((prev) => (prev + 1) % allProducts.length);
+    }, 2000);
+    return () => clearInterval(id);
+  }, []);
+
+  const activeBgColor = hoveredColor || allProducts[colorIndex].color;
 
   // Lock body scroll when either modal is open
   useScrollLock(showAllProducts);
@@ -216,23 +290,50 @@ export default function Hero() {
 
       {/* Background */}
       <div className="absolute inset-0 z-0 pointer-events-none">
-        {/* Warm ambient glow in light mode */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[900px] opacity-[0.18] dark:opacity-[0.04] blur-[180px] rounded-full"
-          style={{ background: 'radial-gradient(circle, #f59e0b 0%, #a78bfa 50%, transparent 80%)' }}
-        />
+        {/* Product-reactive ambient background tint (stacked layers for smooth opacity crossfade) */}
+        {allProducts.map((product) => {
+          const isActive = activeBgColor === product.color;
+          return (
+            <div
+              key={`tint-${product.id}`}
+              className="absolute inset-0 transition-opacity duration-[1500ms] ease-in-out"
+              style={{
+                opacity: isActive ? 1 : 0,
+                background: `radial-gradient(circle at 65% 50%, ${product.color}28 0%, ${product.color}10 45%, transparent 78%)`,
+              }}
+            />
+          );
+        })}
+        {/* Ambient glow cycling through MenuKit, Dauth, Dwise, Subakarya */}
+        <div
+          className="absolute top-1/2 left-1/2 w-[700px] h-[700px] opacity-[0.20] dark:opacity-[0.14] blur-[90px] rounded-full pointer-events-none"
+          style={{ transform: 'translate3d(-50%, -50%, 0)', willChange: 'opacity' }}
+        >
+          {allProducts.map((product) => {
+            const isActive = activeBgColor === product.color;
+            return (
+              <div
+                key={`glow-${product.id}`}
+                className="absolute inset-0 rounded-full transition-opacity duration-[1500ms] ease-in-out"
+                style={{
+                  opacity: isActive ? 1 : 0,
+                  background: `radial-gradient(circle, ${product.color} 0%, ${product.color}66 50%, transparent 80%)`,
+                }}
+              />
+            );
+          })}
+        </div>
 
-        {/* Stars */}
-        <svg className="absolute inset-0 w-full h-full opacity-60 dark:opacity-100 pointer-events-none">
+        {/* Stars (lightweight static vector render) */}
+        <svg className="absolute inset-0 w-full h-full opacity-60 dark:opacity-100 pointer-events-none" aria-hidden="true">
           {STARS.map((star) => (
-            <motion.circle
+            <circle
               key={star.id}
               cx={star.cx}
               cy={star.cy}
               r={star.r}
               className="fill-stone-400 dark:fill-white"
-              initial={{ opacity: star.blink ? star.baseOpacity : star.baseOpacity }}
-              animate={star.blink ? { opacity: [star.baseOpacity, star.peakOpacity, star.baseOpacity] } : { opacity: star.baseOpacity }}
-              transition={star.blink ? { duration: star.dur, repeat: Infinity, ease: 'easeInOut' } : {}}
+              opacity={star.baseOpacity}
             />
           ))}
         </svg>
@@ -243,23 +344,13 @@ export default function Hero() {
 
         {/* Left Side: Typography & CTA */}
         <div className="w-full lg:w-1/2 lg:pr-10 text-center lg:text-left flex flex-col items-center lg:items-start pt-10 lg:pt-0">
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="mb-5 inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-stone-200/80 dark:bg-white/5 border border-stone-300 dark:border-white/10 text-stone-600 dark:text-neutral-400 text-xs font-bold tracking-widest uppercase"
-          >
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-            Now Accepting New Projects
-          </motion.div>
-
           <motion.h1
-            className="text-6xl sm:text-7xl lg:text-[130px] font-extrabold text-stone-900 dark:text-white mb-6 lg:mb-8 tracking-tighter leading-none"
+            className="text-5xl sm:text-6xl lg:text-[78px] xl:text-[88px] font-extrabold text-stone-900 dark:text-white mb-6 lg:mb-8 tracking-tighter leading-[1.02]"
             initial={{ opacity: 0, scale: 0.95, y: 30 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
           >
-            Debuggers
+            Debuggers Technologies
           </motion.h1>
 
           <motion.p
@@ -287,7 +378,7 @@ export default function Hero() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.6 }}
           >
-            {[['50+', 'Projects'], ['6', 'Services'], ['100%', 'Satisfaction']].map(([val, label]) => (
+            {[['10+', 'Projects'], ['6', 'Services'], ['100%', 'Satisfaction']].map(([val, label]) => (
               <div key={label} className="flex flex-col items-center lg:items-start">
                 <span className="text-2xl font-black text-stone-900 dark:text-white tracking-tight">{val}</span>
                 <span className="text-xs font-semibold text-stone-400 dark:text-neutral-500 tracking-wider uppercase">{label}</span>
@@ -329,41 +420,41 @@ export default function Hero() {
 
             {/* ── Ring 1 (innermost, fast) ── */}
             <div className="absolute inset-0 flex items-center justify-center">
-              <OrbitRing products={ring1Products} radius={130} duration={18} counterDuration={18} />
+              <OrbitRing products={ring1Products} radius={130} duration={18} counterDuration={18} onHoverProduct={setHoveredColor} />
             </div>
 
             {/* ── Ring 2 (middle, medium) ── */}
             <div className="absolute inset-0 flex items-center justify-center">
-              <OrbitRing products={ring2Products} radius={215} duration={36} counterDuration={36} />
+              <OrbitRing products={ring2Products} radius={215} duration={36} counterDuration={36} onHoverProduct={setHoveredColor} />
             </div>
 
             {/* ── Ring 3 (outer, slow) ── */}
             <div className="absolute inset-0 flex items-center justify-center">
-              <OrbitRing products={ring3Products} radius={290} duration={60} counterDuration={60} />
+              <OrbitRing products={ring3Products} radius={290} duration={60} counterDuration={60} onHoverProduct={setHoveredColor} />
             </div>
 
             {/* ── Sun / Center ── */}
             <div className="absolute z-20 flex items-center justify-center">
               {/* Outer corona */}
-              <motion.div
-                className="absolute rounded-full opacity-20 dark:opacity-30"
+              <div
+                className="absolute rounded-full opacity-20 dark:opacity-30 pointer-events-none"
                 style={{ width: 140, height: 140, background: 'radial-gradient(circle, #fbbf24, #f59e0b, transparent)' }}
-                animate={{ scale: [1, 1.2, 1] }}
-                transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
               />
               {/* Inner corona */}
-              <motion.div
-                className="absolute rounded-full"
-                style={{ width: 90, height: 90, background: 'radial-gradient(circle, #fef3c7, #fbbf24 60%, transparent)', opacity: 0.35 }}
-                animate={{ scale: [1, 1.15, 1], rotate: [0, 360] }}
-                transition={{ scale: { duration: 3, repeat: Infinity, ease: 'easeInOut' }, rotate: { duration: 30, repeat: Infinity, ease: 'linear' } }}
+              <div
+                className="absolute rounded-full pointer-events-none"
+                style={{
+                  width: 90,
+                  height: 90,
+                  background: 'radial-gradient(circle, #fef3c7, #fbbf24 60%, transparent)',
+                  opacity: 0.35,
+                  animation: 'heroSpin 30s linear infinite',
+                }}
               />
               {/* Spinning ring around sun */}
-              <motion.div
-                className="absolute rounded-full border-2 border-amber-400/50 dark:border-amber-400/30"
-                style={{ width: 78, height: 78 }}
-                animate={{ rotate: 360 }}
-                transition={{ duration: 8, repeat: Infinity, ease: 'linear' }}
+              <div
+                className="absolute rounded-full border-2 border-amber-400/50 dark:border-amber-400/30 pointer-events-none"
+                style={{ width: 78, height: 78, animation: 'heroSpin 10s linear infinite' }}
               />
               {/* Sun body */}
               <div
@@ -434,28 +525,51 @@ export default function Hero() {
                   </button>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {allProducts.map((product, i) => {
                     const Icon = product.icon;
+                    const CardTag = product.url ? motion.a : motion.div;
+                    const linkProps = product.url
+                      ? { href: product.url, target: '_blank', rel: 'noopener noreferrer' }
+                      : {};
                     return (
-                      <motion.div
+                      <CardTag
                         key={product.id}
+                        {...linkProps}
                         initial={{ opacity: 0, y: 16 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: i * 0.06, duration: 0.4 }}
-                        className="group flex flex-col gap-3 p-5 rounded-2xl bg-stone-50 dark:bg-white/3 border border-stone-200 dark:border-white/10 hover:border-stone-300 dark:hover:border-white/25 hover:bg-stone-100 dark:hover:bg-white/6 transition-all duration-300 cursor-pointer"
+                        className="group flex flex-col justify-between gap-4 p-5 rounded-2xl bg-stone-50 dark:bg-white/3 border border-stone-200 dark:border-white/10 hover:border-stone-300 dark:hover:border-white/25 hover:bg-stone-100 dark:hover:bg-white/6 transition-all duration-300 cursor-pointer"
                       >
-                        <div
-                          className="w-11 h-11 rounded-xl flex items-center justify-center transition-colors duration-300"
-                          style={{ background: `${product.color}18`, border: `1px solid ${product.color}33` }}
-                        >
-                          <Icon className="w-5 h-5" style={{ color: product.color }} />
-                        </div>
                         <div>
-                          <h3 className="text-stone-900 dark:text-white font-bold text-sm tracking-tight mb-1">{product.name}</h3>
-                          <p className="text-stone-400 dark:text-neutral-500 text-xs leading-relaxed">{product.desc}</p>
+                          <div className="flex items-center justify-between mb-3">
+                            <div
+                              className="w-12 h-12 rounded-xl flex items-center justify-center transition-colors duration-300"
+                              style={{ background: `${product.color}18`, border: `1px solid ${product.color}33` }}
+                            >
+                              {product.logo ? (
+                                <img src={product.logo} alt={product.name} width="28" height="28" decoding="async" className="w-7 h-7 object-contain" />
+                              ) : (
+                                <Icon className="w-6 h-6" style={{ color: product.color }} />
+                              )}
+                            </div>
+                            <span
+                              className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold tracking-wider uppercase ${
+                                product.status === 'Live'
+                                  ? 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30'
+                                  : 'bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/30'
+                              }`}
+                            >
+                              {product.status}
+                            </span>
+                          </div>
+                          <h3 className="text-stone-900 dark:text-white font-bold text-base tracking-tight mb-1.5 flex items-center gap-1.5">
+                            {product.name}
+                            {product.url && <ExternalLink className="w-3.5 h-3.5 opacity-50 group-hover:opacity-100 transition-opacity" />}
+                          </h3>
+                          <p className="text-stone-500 dark:text-neutral-400 text-xs leading-relaxed">{product.desc}</p>
                         </div>
-                      </motion.div>
+                      </CardTag>
                     );
                   })}
                 </div>

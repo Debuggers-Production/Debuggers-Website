@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap:https://debuggers.co.in/sitemap.xml
+Sitemap: https://debuggerstechnologies.com/sitemap.xml

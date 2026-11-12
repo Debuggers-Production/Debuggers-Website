@@ -17,9 +17,24 @@ const industries = [
 export default function Customers() {
   return (
     <section className="w-full py-20 sm:py-28 bg-[#f0ede8] dark:bg-black border-t border-stone-200 dark:border-white/5 relative z-10 overflow-hidden transition-colors duration-300">
+      {/* Ambient background glow for glass refraction */}
+      <div className="absolute inset-0 w-full h-full pointer-events-none overflow-hidden" aria-hidden="true">
+        <div
+          className="absolute left-1/4 top-1/2 -translate-y-1/2 w-[550px] h-[350px] rounded-full blur-[140px] opacity-15 dark:opacity-20 pointer-events-none"
+          style={{
+            background: 'radial-gradient(circle, #5D72CC 0%, #8b5cf6 50%, transparent 70%)',
+          }}
+        />
+        <div
+          className="absolute right-1/4 top-1/2 -translate-y-1/2 w-[550px] h-[350px] rounded-full blur-[140px] opacity-15 dark:opacity-15 pointer-events-none"
+          style={{
+            background: 'radial-gradient(circle, #38bdf8 0%, #5D72CC 50%, transparent 70%)',
+          }}
+        />
+      </div>
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 mb-12 sm:mb-16 text-center z-20 relative">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-stone-200 dark:bg-white/5 border border-stone-300 dark:border-white/10 text-stone-500 dark:text-neutral-500 text-xs font-bold tracking-widest uppercase mb-5">
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
           Our Reach
         </div>
         <h2 className="text-3xl md:text-5xl font-extrabold text-stone-900 dark:text-white tracking-tight mb-4">
@@ -37,6 +52,7 @@ export default function Customers() {
 
         <motion.div
           className="flex whitespace-nowrap gap-5 pl-6"
+          style={{ willChange: 'transform' }}
           animate={{ x: ["0%", "-50%"] }}
           transition={{ duration: 50, repeat: Infinity, ease: "linear" }}
         >
@@ -45,10 +61,13 @@ export default function Customers() {
             return (
               <div
                 key={index}
-                className="flex items-center gap-3 md:gap-4 px-5 md:px-7 py-3 md:py-4 rounded-full bg-[#faf8f5] dark:bg-white/3 border border-stone-200 dark:border-white/10 shadow-[0_2px_12px_rgba(28,26,23,0.06)] dark:shadow-[0_10px_30px_rgba(0,0,0,0.5)] cursor-default hover:bg-stone-100 dark:hover:bg-white/8 transition-colors duration-200"
+                className="group flex items-center gap-3 md:gap-4 px-5 md:px-7 py-3 md:py-4 rounded-full bg-white/45 dark:bg-white/[0.04] hover:bg-white/60 dark:hover:bg-white/[0.08] backdrop-blur-xl border border-white/70 dark:border-white/15 hover:border-white/90 dark:hover:border-white/30 shadow-[0_8px_30px_rgba(28,26,23,0.05),inset_0_1px_1px_rgba(255,255,255,0.9)] dark:shadow-[0_8px_30px_rgba(0,0,0,0.5),inset_0_1px_1px_rgba(255,255,255,0.12)] cursor-default transition-all duration-300 relative overflow-hidden"
               >
-                <div className="w-9 h-9 md:w-11 md:h-11 rounded-full bg-stone-100 dark:bg-black border border-stone-200 dark:border-white/20 flex items-center justify-center">
-                  <Icon className="w-4 h-4 md:w-5 md:h-5 text-stone-600 dark:text-neutral-300" />
+                {/* Top specular sheen line */}
+                <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/80 dark:via-white/20 to-transparent pointer-events-none" />
+
+                <div className="w-9 h-9 md:w-11 md:h-11 rounded-full bg-white/60 dark:bg-white/[0.06] backdrop-blur-md border border-white/80 dark:border-white/20 flex items-center justify-center shadow-[inset_0_1px_1px_rgba(255,255,255,0.5)] dark:shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)] group-hover:scale-105 transition-transform duration-300">
+                  <Icon className="w-4 h-4 md:w-5 md:h-5 text-stone-700 dark:text-white transition-colors duration-200" />
                 </div>
                 <span className="text-sm md:text-lg font-bold text-stone-800 dark:text-white tracking-tight pr-1">{item.name}</span>
               </div>

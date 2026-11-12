@@ -133,7 +133,6 @@ export default function Team() {
           className="text-center mb-16 sm:mb-20"
         >
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-stone-200 dark:bg-white/5 border border-stone-300 dark:border-white/10 text-stone-500 dark:text-neutral-500 text-xs font-bold tracking-widest uppercase mb-5">
-            <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
             The People
           </div>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-stone-900 dark:text-white tracking-tight mb-4">Our Top Developers.</h2>

@@ -1,12 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
 import ReactDOM from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import { submitToWeb3Forms } from '../utils/web3forms';
+import CountryCodeSelector from './CountryCodeSelector';
 import {
   X, Rocket, User, Target, Radio, Clock, FileText,
   BrainCircuit, CloudCog, ShieldCheck, Smartphone, PenTool, Layers,
-  MessageCircle, Mail, Phone, CheckCircle, ChevronRight, Star,
+  MessageCircle, Mail, Phone, CheckCircle, ChevronRight, Check,
   Wrench, Zap, PlusCircle, Sunrise, Sun, Sunset, Shuffle,
-  SendHorizonal,
+  SendHorizonal, Tag,
 } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
 
@@ -14,7 +16,7 @@ import { useTheme } from '../context/ThemeContext';
 const SERVICES = [
   { id: 'web-development',         label: 'Web Development',       icon: Layers,       color: '#60a5fa' },
   { id: 'ui-ux-design',            label: 'UI/UX Design',          icon: PenTool,      color: '#e879f9' },
-  { id: 'mobile-apps',             label: 'Mobile Apps',           icon: Smartphone,   color: '#34d399' },
+  { id: 'mobile-apps',             label: 'Mobile & Desktop Apps', icon: Smartphone,   color: '#34d399' },
   { id: 'cloud-devops',            label: 'Cloud & DevOps',        icon: CloudCog,     color: '#38bdf8' },
   { id: 'cyber-security',          label: 'Cyber Security',        icon: ShieldCheck,  color: '#f87171' },
   { id: 'artificial-intelligence', label: 'AI & ML',               icon: BrainCircuit, color: '#a78bfa' },
@@ -40,11 +42,11 @@ const TIMESLOTS = [
 ];
 
 const STEPS = [
-  { Icon: User,      title: "What's your name, Commander?",  sub: "Every great mission starts with knowing who's leading it."     },
-  { Icon: Target,    title: 'Choose Your Mission',            sub: "Tell us what you need and what kind of project you're launching." },
-  { Icon: Radio,     title: 'Beam Us Your Coordinates',       sub: "How should we reach you? We'll prioritise your preferred channel." },
-  { Icon: Clock,     title: 'Pick Your Launch Window',        sub: "When are you free? We'll schedule around your orbit."              },
-  { Icon: FileText,  title: 'Mission Brief',                  sub: 'Any extra context for mission control? (Optional)'                 },
+  { slug: 'step-1-name',    Icon: User,      title: "What's your name, Commander?",  sub: "Every great mission starts with knowing who's leading it."     },
+  { slug: 'step-2-mission', Icon: Target,    title: 'Choose Your Mission',            sub: "Tell us what you need and what kind of project you're launching." },
+  { slug: 'step-3-contact', Icon: Radio,     title: 'Beam Us Your Coordinates',       sub: "How should we reach you? We'll prioritise your preferred channel." },
+  { slug: 'step-4-timing',  Icon: Clock,     title: 'Pick Your Launch Window',        sub: "When are you free? We'll schedule around your orbit."              },
+  { slug: 'step-5-brief',   Icon: FileText,  title: 'Mission Brief',                  sub: 'Any extra context for mission control? (Optional)'                 },
 ];
 
 /* ─── Static star field (25 stars, no per-star animation) ──────────────────── */
@@ -61,7 +63,7 @@ function StepDots({ current, total }) {
         <motion.div key={i}
           animate={{ width: i === current ? 22 : 6, opacity: i <= current ? 1 : 0.2 }}
           transition={{ duration: 0.3 }}
-          style={{ height: 5, borderRadius: 99, background: i === current ? '#7c3aed' : '#6b7280' }}
+          style={{ height: 5, borderRadius: 99, background: i === current ? '#5D72CC' : '#6b7280' }}
         />
       ))}
     </div>
@@ -81,39 +83,39 @@ function useScrollLock(active) {
 /* ─── Theme tokens ──────────────────────────────────────────────────────────── */
 function tk(isDark) {
   return {
-    backdropBg:    isDark ? 'rgba(0,0,0,0.80)'    : 'rgba(8,5,28,0.55)',
-    cardBg:        isDark ? 'rgba(0,0,0,0.82)'    : 'rgba(255,255,255,0.72)',
-    cardBorder:    isDark ? 'rgba(255,255,255,0.08)': 'rgba(124,58,237,0.15)',
+    backdropBg:    isDark ? 'rgba(0,0,0,0.82)'    : 'rgba(15,23,42,0.45)',
+    cardBg:        isDark ? 'rgba(10,10,14,0.92)'  : 'rgba(255,255,255,0.97)',
+    cardBorder:    isDark ? 'rgba(255,255,255,0.10)': 'rgba(93,114,204,0.24)',
     cardShadow:    isDark
       ? '0 0 0 1px rgba(255,255,255,0.04), 0 40px 100px rgba(0,0,0,0.95), 0 0 0 0.5px rgba(255,255,255,0.03) inset'
-      : '0 0 0 1px rgba(124,58,237,0.06), 0 28px 70px rgba(0,0,0,0.16), 0 0 30px rgba(124,58,237,0.04)',
-    textPrimary:   isDark ? '#f3f0ff' : '#1c1433',
-    textSecondary: isDark ? '#9ca3af' : '#6b7280',
-    textMuted:     isDark ? '#6b7280' : '#9ca3af',
-    inputBg:       isDark ? 'rgba(255,255,255,0.05)' : 'rgba(124,58,237,0.05)',
-    inputBorder:   isDark ? 'rgba(255,255,255,0.09)' : 'rgba(124,58,237,0.15)',
-    inputActive:   isDark ? 'rgba(167,139,250,0.55)' : 'rgba(124,58,237,0.45)',
-    chipBg:        isDark ? 'rgba(255,255,255,0.05)' : 'rgba(255,255,255,0.55)',
-    chipBorder:    isDark ? 'rgba(255,255,255,0.10)' : 'rgba(124,58,237,0.12)',
-    divider:       isDark ? 'rgba(255,255,255,0.08)' : 'rgba(124,58,237,0.1)',
-    closeBg:       isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)',
-    closeBorder:   isDark ? 'rgba(255,255,255,0.13)' : 'rgba(0,0,0,0.1)',
-    closeColor:    isDark ? '#9ca3af'                : '#6b7280',
-    summaryBg:     isDark ? 'rgba(255,255,255,0.05)' : 'rgba(124,58,237,0.05)',
-    summaryBorder: isDark ? 'rgba(255,255,255,0.09)' : 'rgba(124,58,237,0.12)',
-    summaryVal:    isDark ? '#ffffff'                : '#3b1fa8',
-    starsColor:    isDark ? 'rgba(255,255,255,0.9)'  : '#7c3aed',
+      : '0 24px 64px rgba(15,23,42,0.24), 0 0 0 1px rgba(255,255,255,0.85) inset',
+    textPrimary:   isDark ? '#f3f0ff' : '#0f172a',
+    textSecondary: isDark ? '#9ca3af' : '#475569',
+    textMuted:     isDark ? '#6b7280' : '#64748b',
+    inputBg:       isDark ? 'rgba(255,255,255,0.05)' : '#f8fafc',
+    inputBorder:   isDark ? 'rgba(255,255,255,0.10)' : 'rgba(15,23,42,0.14)',
+    inputActive:   'rgba(93,114,204,0.7)',
+    chipBg:        isDark ? 'rgba(255,255,255,0.05)' : '#ffffff',
+    chipBorder:    isDark ? 'rgba(255,255,255,0.10)' : 'rgba(15,23,42,0.12)',
+    divider:       isDark ? 'rgba(255,255,255,0.08)' : 'rgba(15,23,42,0.10)',
+    closeBg:       isDark ? 'rgba(255,255,255,0.08)' : 'rgba(15,23,42,0.06)',
+    closeBorder:   isDark ? 'rgba(255,255,255,0.13)' : 'rgba(15,23,42,0.14)',
+    closeColor:    isDark ? '#9ca3af'                : '#334155',
+    summaryBg:     isDark ? 'rgba(255,255,255,0.05)' : '#f8fafc',
+    summaryBorder: isDark ? 'rgba(255,255,255,0.09)' : 'rgba(15,23,42,0.12)',
+    summaryVal:    isDark ? '#ffffff'                : '#1e293b',
+    starsColor:    isDark ? 'rgba(255,255,255,0.9)'  : '#5D72CC',
     starsBase:     isDark ? 1                        : 0.35,
-    nebula1:       isDark ? 'rgba(255,255,255,0.025)': 'rgba(124,58,237,0.06)',
-    nebula2:       isDark ? 'rgba(255,255,255,0.015)': 'rgba(99,102,241,0.05)',
-    backBg:        isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.05)',
-    backBorder:    isDark ? 'rgba(255,255,255,0.11)' : 'rgba(0,0,0,0.09)',
-    backColor:     isDark ? '#9ca3af'                : '#6b7280',
+    nebula1:       isDark ? 'rgba(255,255,255,0.025)': 'rgba(93,114,204,0.10)',
+    nebula2:       isDark ? 'rgba(255,255,255,0.015)': 'rgba(93,114,204,0.08)',
+    backBg:        isDark ? 'rgba(255,255,255,0.06)' : 'rgba(15,23,42,0.06)',
+    backBorder:    isDark ? 'rgba(255,255,255,0.11)' : 'rgba(15,23,42,0.14)',
+    backColor:     isDark ? '#9ca3af'                : '#334155',
   };
 }
 
 /* ─── Main ──────────────────────────────────────────────────────────────────── */
-export default function ContactModal({ isOpen, onClose, preselectedService = null }) {
+export default function ContactModal({ isOpen, onClose, preselectedService = null, preselectedPlan = null }) {
   const { isDark } = useTheme();
   const t = tk(isDark);
   useScrollLock(isOpen);
@@ -123,19 +125,55 @@ export default function ContactModal({ isOpen, onClose, preselectedService = nul
   const [submitting, setSub] = useState(false);
   const [submitted, setDone] = useState(false);
   const [error, setError]    = useState('');
-  const [form, setForm]      = useState({ name:'', service:'', projectType:'', email:'', mobile:'', contactMode:'', timing:'', description:'' });
+  const [form, setForm]      = useState({
+    name: '',
+    service: '',
+    plan: null,
+    projectType: '',
+    email: '',
+    countryCode: '+91',
+    mobile: '',
+    contactMode: '',
+    timing: '',
+    description: '',
+  });
   const nameRef = useRef(null);
 
   useEffect(() => {
     if (isOpen) {
-      setForm(f => ({ ...f, service: preselectedService || f.service }));
+      const urlService = typeof window !== 'undefined' ? new URLSearchParams(window.location.search).get('service') : null;
+      const effectiveService = preselectedService || urlService || '';
+      setForm(f => ({
+        ...f,
+        service: effectiveService || f.service,
+        plan: preselectedPlan !== undefined ? preselectedPlan : f.plan,
+      }));
       setStep(0); setDone(false); setError('');
     }
-  }, [isOpen, preselectedService]);
+  }, [isOpen, preselectedService, preselectedPlan]);
 
   useEffect(() => {
     if (isOpen && step === 0) setTimeout(() => nameRef.current?.focus(), 380);
   }, [isOpen, step]);
+
+  // Sync URL query param (?contact=step-X-...) so drop-off steps can be tracked
+  useEffect(() => {
+    const url = new URL(window.location.href);
+    if (isOpen) {
+      const contactState = submitted ? 'submitted' : (STEPS[step]?.slug || `step-${step + 1}`);
+      url.searchParams.set('contact', contactState);
+      window.history.replaceState(null, '', `${url.pathname}${url.search}${url.hash}`);
+      if (typeof window.gtag === 'function') {
+        window.gtag('event', 'contact_funnel_step', {
+          contact_step: contactState,
+          page_path: `${url.pathname}${url.search}`,
+        });
+      }
+    } else if (url.searchParams.has('contact')) {
+      url.searchParams.delete('contact');
+      window.history.replaceState(null, '', `${url.pathname}${url.search}${url.hash}`);
+    }
+  }, [isOpen, step, submitted]);
 
   const upd = (k, v) => setForm(f => ({ ...f, [k]: v }));
 
@@ -149,24 +187,42 @@ export default function ContactModal({ isOpen, onClose, preselectedService = nul
 
   const handleSubmit = async () => {
     setSub(true); setError('');
+    const serviceLabel = SERVICES.find(s => s.id === form.service)?.label || form.service || 'General Inquiry';
+    const projectTypeLabel = PROJECT_TYPES.find(p => p.id === form.projectType)?.label || form.projectType;
+    const planText = form.plan?.tier
+      ? `${form.plan.tier}${form.plan.price ? ` (${form.plan.price})` : ''}`
+      : (typeof form.plan === 'string' && form.plan ? form.plan : '');
+    const emailSubject = planText
+      ? `[Service: ${serviceLabel}] ${form.name} — ${planText}`
+      : `[Service: ${serviceLabel}] ${form.name} — Project Inquiry`;
+
     try {
-      const res = await fetch('https://formspree.io/f/xyzgpgwj', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-        body: JSON.stringify({
-          name: form.name,
-          service: SERVICES.find(s => s.id === form.service)?.label || form.service,
-          projectType: PROJECT_TYPES.find(p => p.id === form.projectType)?.label || form.projectType,
-          email: form.email, mobile: form.mobile,
+      await submitToWeb3Forms({
+        subject: emailSubject,
+        name: form.name,
+        email: form.email,
+        fields: {
+          inquiredService: serviceLabel,
+          serviceId: form.service,
+          selectedPlan: planText || 'Not specified',
+          projectType: projectTypeLabel,
+          clientName: form.name,
+          clientEmail: form.email,
+          mobile: `${form.countryCode} ${form.mobile.trim()}`,
           preferredContact: form.contactMode,
           availableTiming: form.timing,
-          description: form.description,
-        }),
+          description: form.description || 'No additional description provided',
+          sourceUrl: window.location.href,
+          sourcePage: window.location.pathname,
+          submittedAt: new Date().toISOString(),
+        },
       });
-      if (res.ok) setDone(true);
-      else setError('Houston, we had a problem. Please try again.');
-    } catch { setError('Network error — please check your connection.'); }
-    finally { setSub(false); }
+      setDone(true);
+    } catch (err) {
+      setError(err.message || 'Unable to send your inquiry right now. Please try again.');
+    } finally {
+      setSub(false);
+    }
   };
 
   const selectedSvc = SERVICES.find(s => s.id === form.service);
@@ -267,21 +323,21 @@ export default function ContactModal({ isOpen, onClose, preselectedService = nul
                       <motion.div
                         animate={{ rotate: [0, -12, 12, -8, 8, 0], scale: [1,1.2,1] }}
                         transition={{ duration: 0.7 }}
-                        style={{ width: 72, height: 72, borderRadius: 20, background: 'linear-gradient(135deg,#7c3aed22,#4f46e522)', border: '1px solid rgba(124,58,237,0.35)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        <Rocket size={32} style={{ color: '#7c3aed' }} />
+                        style={{ width: 72, height: 72, borderRadius: 20, background: 'linear-gradient(135deg,rgba(93,114,204,0.18),rgba(67,85,165,0.18))', border: '1px solid rgba(93,114,204,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <Rocket size={32} style={{ color: '#5D72CC' }} />
                       </motion.div>
 
                       <div>
                         <h2 style={{ fontSize: 23, fontWeight: 900, color: t.textPrimary, margin: '0 0 8px', letterSpacing: '-0.03em' }}>Mission Launched!</h2>
                         <p style={{ color: t.textSecondary, fontSize: 13.5, lineHeight: 1.65, maxWidth: 280, margin: '0 auto' }}>
-                          We've received your signal, <strong style={{ color: '#7c3aed' }}>{form.name}</strong>! Our team will reach you via{' '}
-                          <strong style={{ color: '#7c3aed', textTransform: 'capitalize' }}>{form.contactMode}</strong> soon.
+                          We've received your signal, <strong style={{ color: '#5D72CC' }}>{form.name}</strong>! Our team will reach you via{' '}
+                          <strong style={{ color: '#5D72CC', textTransform: 'capitalize' }}>{form.contactMode}</strong> soon.
                         </p>
                       </div>
 
                       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, justifyContent: 'center' }}>
                         {['Received', form.contactMode && `Via ${form.contactMode}`, selectedTiming?.label].filter(Boolean).map((tag, i) => (
-                          <span key={i} style={{ padding: '4px 12px', borderRadius: 99, background: 'rgba(124,58,237,0.12)', border: '1px solid rgba(124,58,237,0.28)', color: '#7c3aed', fontSize: 11, fontWeight: 700 }}>
+                          <span key={i} style={{ padding: '4px 12px', borderRadius: 99, background: 'rgba(93,114,204,0.14)', border: '1px solid rgba(93,114,204,0.3)', color: '#5D72CC', fontSize: 11, fontWeight: 700 }}>
                             <CheckCircle size={10} style={{ display: 'inline', marginRight: 4, verticalAlign: 'middle' }} />{tag}
                           </span>
                         ))}
@@ -289,10 +345,10 @@ export default function ContactModal({ isOpen, onClose, preselectedService = nul
 
                       <button onClick={onClose} style={{
                         marginTop: 2, padding: '10px 28px', borderRadius: 99,
-                        background: 'linear-gradient(135deg,#7c3aed,#4f46e5)',
-                        border: '1px solid rgba(124,58,237,0.4)',
+                        background: 'linear-gradient(135deg,#5D72CC,#4355A5)',
+                        border: '1px solid rgba(93,114,204,0.4)',
                         color: '#fff', fontWeight: 800, fontSize: 13,
-                        cursor: 'pointer', boxShadow: '0 0 24px rgba(124,58,237,0.35)',
+                        cursor: 'pointer', boxShadow: '0 0 24px rgba(93,114,204,0.35)',
                         display: 'flex', alignItems: 'center', gap: 7,
                       }}>
                         <Rocket size={14} /> Back to Base
@@ -306,11 +362,11 @@ export default function ContactModal({ isOpen, onClose, preselectedService = nul
                       {/* Header */}
                       <div style={{ marginBottom: 20 }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 11 }}>
-                          <div style={{ width: 32, height: 32, borderRadius: 9, background: 'rgba(124,58,237,0.13)', border: '1px solid rgba(124,58,237,0.24)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                            <CurStep.Icon size={16} style={{ color: '#7c3aed' }} />
+                          <div style={{ width: 32, height: 32, borderRadius: 9, background: 'rgba(93,114,204,0.14)', border: '1px solid rgba(93,114,204,0.28)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                            <CurStep.Icon size={16} style={{ color: '#5D72CC' }} />
                           </div>
                           <div>
-                            <p style={{ color: '#7c3aed', fontSize: 10, fontWeight: 800, letterSpacing: '0.16em', textTransform: 'uppercase', marginBottom: 4 }}>
+                            <p style={{ color: '#5D72CC', fontSize: 10, fontWeight: 800, letterSpacing: '0.16em', textTransform: 'uppercase', marginBottom: 4 }}>
                               Mission Control · Step {step + 1} of {TOTAL}
                             </p>
                             <StepDots current={step} total={TOTAL} />
@@ -326,7 +382,7 @@ export default function ContactModal({ isOpen, onClose, preselectedService = nul
                         {step === 0 && (
                           <motion.div key="s0" initial={{ opacity:0, x:18 }} animate={{ opacity:1, x:0 }} exit={{ opacity:0, x:-18 }} transition={{ duration:0.18 }}>
                             <div style={{ position: 'relative' }}>
-                              <User size={15} style={{ position:'absolute', left:14, top:'50%', transform:'translateY(-50%)', color:'#7c3aed', pointerEvents:'none' }} />
+                              <User size={15} style={{ position:'absolute', left:14, top:'50%', transform:'translateY(-50%)', color:'#5D72CC', pointerEvents:'none' }} />
                               <input ref={nameRef} type="text" placeholder="Your full name..." value={form.name}
                                 onChange={e => upd('name', e.target.value)}
                                 onKeyDown={e => e.key === 'Enter' && canNext() && setStep(1)}
@@ -335,7 +391,7 @@ export default function ContactModal({ isOpen, onClose, preselectedService = nul
                                 {form.name.length >= 2 && (
                                   <motion.div initial={{scale:0}} animate={{scale:1}} exit={{scale:0}}
                                     style={{ position:'absolute', right:13, top:'50%', transform:'translateY(-50%)' }}>
-                                    <CheckCircle size={16} style={{ color:'#7c3aed' }} />
+                                    <CheckCircle size={16} style={{ color:'#5D72CC' }} />
                                   </motion.div>
                                 )}
                               </AnimatePresence>
@@ -389,15 +445,15 @@ export default function ContactModal({ isOpen, onClose, preselectedService = nul
                                     style={{
                                       display:'flex', flexDirection:'column', alignItems:'center',
                                       gap:5, padding:'11px 6px', borderRadius:12, cursor:'pointer',
-                                      background: active ? 'rgba(124,58,237,0.13)' : t.chipBg,
-                                      border: `1.5px solid ${active ? 'rgba(124,58,237,0.48)' : t.chipBorder}`,
-                                      boxShadow: active ? '0 0 16px rgba(124,58,237,0.15)' : 'none',
+                                      background: active ? 'rgba(93,114,204,0.14)' : t.chipBg,
+                                      border: `1.5px solid ${active ? 'rgba(93,114,204,0.55)' : t.chipBorder}`,
+                                      boxShadow: active ? '0 0 16px rgba(93,114,204,0.2)' : 'none',
                                       transition:'all 0.18s',
                                     }}>
-                                    <div style={{ width:30, height:30, borderRadius:9, background: active ? 'rgba(124,58,237,0.2)' : 'rgba(255,255,255,0.06)', border:`1px solid ${active ? 'rgba(124,58,237,0.4)' : 'rgba(255,255,255,0.08)'}`, display:'flex', alignItems:'center', justifyContent:'center' }}>
-                                      <Icon size={15} style={{ color: active ? '#7c3aed' : t.textMuted }} />
+                                    <div style={{ width:30, height:30, borderRadius:9, background: active ? 'rgba(93,114,204,0.22)' : 'rgba(255,255,255,0.06)', border:`1px solid ${active ? 'rgba(93,114,204,0.45)' : 'rgba(255,255,255,0.08)'}`, display:'flex', alignItems:'center', justifyContent:'center' }}>
+                                      <Icon size={15} style={{ color: active ? '#5D72CC' : t.textMuted }} />
                                     </div>
-                                    <span style={{ fontSize:10, fontWeight:800, color: active ? '#7c3aed' : t.textSecondary, lineHeight:1.2, textAlign:'center' }}>{pt.label}</span>
+                                    <span style={{ fontSize:10, fontWeight:800, color: active ? '#5D72CC' : t.textSecondary, lineHeight:1.2, textAlign:'center' }}>{pt.label}</span>
                                     <span style={{ fontSize:9, color:t.textMuted, textAlign:'center' }}>{pt.desc}</span>
                                   </motion.button>
                                 );
@@ -415,10 +471,23 @@ export default function ContactModal({ isOpen, onClose, preselectedService = nul
                                 <input type="email" placeholder="Email address" value={form.email} onChange={e => upd('email', e.target.value)}
                                   style={{ ...input(form.email.includes('@')), paddingLeft:38 }} />
                               </div>
-                              <div style={{ position:'relative' }}>
-                                <Phone size={14} style={{ position:'absolute', left:13, top:'50%', transform:'translateY(-50%)', color:'#f59e0b', pointerEvents:'none' }} />
+                              <div style={{ display:'flex', gap:8, alignItems:'stretch' }}>
+                                <CountryCodeSelector
+                                  value={form.countryCode}
+                                  onChange={code => upd('countryCode', code)}
+                                  isDark={isDark}
+                                  buttonStyle={{
+                                    ...input(true),
+                                    width: 'auto',
+                                    paddingLeft: 12,
+                                    paddingRight: 10,
+                                    cursor: 'pointer',
+                                    borderColor: t.inputBorder,
+                                    background: isDark ? 'rgba(255,255,255,0.05)' : '#f8fafc',
+                                  }}
+                                />
                                 <input type="tel" placeholder="Mobile number" value={form.mobile} onChange={e => upd('mobile', e.target.value)}
-                                  style={{ ...input(form.mobile.trim().length >= 7), paddingLeft:38 }} />
+                                  style={{ ...input(form.mobile.trim().length >= 7), flex:1, paddingLeft:14 }} />
                               </div>
                             </div>
 
@@ -445,7 +514,7 @@ export default function ContactModal({ isOpen, onClose, preselectedService = nul
                                     {active && (
                                       <motion.div initial={{scale:0}} animate={{scale:1}}
                                         style={{ position:'absolute', top:-5, right:-5, width:15, height:15, borderRadius:'50%', background:m.color, display:'flex', alignItems:'center', justifyContent:'center' }}>
-                                        <Star size={8} style={{ color:'#fff', fill:'#fff' }} />
+                                        <Check size={9} style={{ color:'#fff' }} />
                                       </motion.div>
                                     )}
                                   </motion.button>
@@ -468,13 +537,13 @@ export default function ContactModal({ isOpen, onClose, preselectedService = nul
                                     style={{
                                       display:'flex', alignItems:'center', gap:11,
                                       padding:'13px 12px', borderRadius:15, cursor:'pointer',
-                                      background: active ? 'rgba(124,58,237,0.13)' : t.chipBg,
-                                      border: `1.5px solid ${active ? 'rgba(124,58,237,0.48)' : t.chipBorder}`,
-                                      boxShadow: active ? '0 0 20px rgba(124,58,237,0.14)' : 'none',
+                                      background: active ? 'rgba(93,114,204,0.14)' : t.chipBg,
+                                      border: `1.5px solid ${active ? 'rgba(93,114,204,0.55)' : t.chipBorder}`,
+                                      boxShadow: active ? '0 0 20px rgba(93,114,204,0.18)' : 'none',
                                       transition:'all 0.2s',
                                     }}>
-                                    <div style={{ width:34, height:34, borderRadius:10, background: active ? 'rgba(124,58,237,0.2)' : 'rgba(255,255,255,0.06)', border:`1px solid ${active ? 'rgba(124,58,237,0.4)' : 'rgba(255,255,255,0.08)'}`, display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
-                                      <Icon size={17} style={{ color: active ? '#7c3aed' : t.textMuted }} />
+                                    <div style={{ width:34, height:34, borderRadius:10, background: active ? 'rgba(93,114,204,0.22)' : 'rgba(255,255,255,0.06)', border:`1px solid ${active ? 'rgba(93,114,204,0.45)' : 'rgba(255,255,255,0.08)'}`, display:'flex', alignItems:'center', justifyContent:'center', flexShrink:0 }}>
+                                      <Icon size={17} style={{ color: active ? '#5D72CC' : t.textMuted }} />
                                     </div>
                                     <div>
                                       <p style={{ color:t.textPrimary, fontWeight:800, fontSize:12, margin:0, lineHeight:1.3 }}>{slot.label}</p>
@@ -482,7 +551,7 @@ export default function ContactModal({ isOpen, onClose, preselectedService = nul
                                     </div>
                                     {active && (
                                       <motion.div initial={{scale:0}} animate={{scale:1}}
-                                        style={{ marginLeft:'auto', width:18, height:18, borderRadius:'50%', background:'#7c3aed', display:'flex', alignItems:'center', justifyContent:'center' }}>
+                                        style={{ marginLeft:'auto', width:18, height:18, borderRadius:'50%', background:'#5D72CC', display:'flex', alignItems:'center', justifyContent:'center' }}>
                                         <CheckCircle size={11} style={{ color:'#fff' }} />
                                       </motion.div>
                                     )}
@@ -507,17 +576,22 @@ export default function ContactModal({ isOpen, onClose, preselectedService = nul
 
                             {/* Summary */}
                             <div style={{ borderRadius:13, padding:'13px 14px', background:t.summaryBg, border:`1px solid ${t.summaryBorder}` }}>
-                              <p style={{ fontSize:9, fontWeight:800, color:'#7c3aed', letterSpacing:'0.16em', textTransform:'uppercase', marginBottom:10 }}>Mission Summary</p>
+                              <p style={{ fontSize:9, fontWeight:800, color:'#5D72CC', letterSpacing:'0.16em', textTransform:'uppercase', marginBottom:10 }}>Mission Summary</p>
                               {[
                                 { Icon: User,       label:'Commander',  val: form.name },
                                 { Icon: Target,     label:'Service',    val: selectedSvc?.label },
+                                ...(form.plan ? [{
+                                  Icon: Tag,
+                                  label: 'Plan',
+                                  val: form.plan?.tier ? `${form.plan.tier} (${form.plan.price})` : String(form.plan),
+                                }] : []),
                                 { Icon: Rocket,     label:'Project',    val: selectedProj?.label },
                                 { Icon: Radio,      label:'Contact via',val: form.contactMode },
                                 { Icon: Clock,      label:'Window',     val: selectedTiming?.label },
                               ].map(row => (
                                 <div key={row.label} style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:7 }}>
                                   <span style={{ display:'flex', alignItems:'center', gap:6, fontSize:12, color:t.textSecondary }}>
-                                    <row.Icon size={12} style={{ color:'#7c3aed', flexShrink:0 }} />
+                                    <row.Icon size={12} style={{ color:'#5D72CC', flexShrink:0 }} />
                                     {row.label}
                                   </span>
                                   <span style={{ fontSize:12, fontWeight:700, color:t.summaryVal, textTransform:'capitalize' }}>{row.val || '—'}</span>
@@ -544,9 +618,9 @@ export default function ContactModal({ isOpen, onClose, preselectedService = nul
                             style={{
                               display:'flex', alignItems:'center', gap:5,
                               padding:'10px 24px', borderRadius:11,
-                              background: canNext() ? 'linear-gradient(135deg,#7c3aed,#4f46e5)' : (isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)'),
-                              border:`1px solid ${canNext() ? 'rgba(124,58,237,0.45)' : (isDark ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.07)')}`,
-                              boxShadow: canNext() ? '0 0 22px rgba(124,58,237,0.32)' : 'none',
+                              background: canNext() ? 'linear-gradient(135deg,#5D72CC,#4355A5)' : (isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)'),
+                              border:`1px solid ${canNext() ? 'rgba(93,114,204,0.45)' : (isDark ? 'rgba(255,255,255,0.07)' : 'rgba(0,0,0,0.07)')}`,
+                              boxShadow: canNext() ? '0 0 22px rgba(93,114,204,0.32)' : 'none',
                               color: canNext() ? '#fff' : t.textMuted,
                               fontSize:13, fontWeight:800,
                               cursor: canNext() ? 'pointer' : 'not-allowed',
@@ -558,11 +632,12 @@ export default function ContactModal({ isOpen, onClose, preselectedService = nul
                         ) : (
                           <motion.button whileTap={{ scale:0.97 }} onClick={handleSubmit} disabled={submitting}
                             style={{
-                              display:'flex', alignItems:'center', gap:7,
-                              padding:'10px 24px', borderRadius:11,
-                              background:'linear-gradient(135deg,#7c3aed,#4f46e5)',
-                              border:'1px solid rgba(124,58,237,0.45)',
-                              boxShadow:'0 0 26px rgba(124,58,237,0.36)',
+                              display:'flex', alignItems:'center', justifyContent:'center', gap:7,
+                              flex: 1, marginLeft: 10,
+                              padding:'11px 24px', borderRadius:11,
+                              background:'linear-gradient(135deg,#5D72CC,#4355A5)',
+                              border:'1px solid rgba(93,114,204,0.45)',
+                              boxShadow:'0 0 26px rgba(93,114,204,0.36)',
                               color:'#fff', fontSize:13, fontWeight:800,
                               cursor: submitting ? 'not-allowed' : 'pointer',
                               opacity: submitting ? 0.7 : 1,
@@ -598,7 +673,7 @@ function SectionLabel({ label, color, suffix }) {
   return (
     <p style={{ fontSize:10, fontWeight:800, color, letterSpacing:'0.15em', textTransform:'uppercase', marginBottom:8, display:'flex', alignItems:'center', gap:6 }}>
       {label}
-      {suffix && <span style={{ color:'#7c3aed', fontWeight:600, textTransform:'none', letterSpacing:0, fontSize:11 }}>{suffix}</span>}
+      {suffix && <span style={{ color:'#5D72CC', fontWeight:600, textTransform:'none', letterSpacing:0, fontSize:11 }}>{suffix}</span>}
     </p>
   );
 }

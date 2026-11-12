@@ -210,7 +210,7 @@ export const servicesData = {
 
   'mobile-apps': {
     slug: 'mobile-apps',
-    title: 'Mobile Apps',
+    title: 'Mobile & Desktop Apps',
     tagline: 'Native Quality.\nCross-Platform Speed.',
     subtext: 'We build stunning iOS and Android apps that your users will actually enjoy using. From MVP to App Store, we take your idea all the way.',
     icon: Smartphone,

@@ -1,17 +1,34 @@
 import React, { useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { CheckCircle2, ChevronDown, ChevronUp, Star, Zap, Crown, ArrowRight } from 'lucide-react';
+import { CheckCircle2, ChevronDown, ChevronUp, Package, Zap, Crown, ArrowRight, Rocket } from 'lucide-react';
 import { servicesData } from '../data/servicesData';
 import Navbar from '../components/Navbar';
 import ContactModal from '../components/ContactModal';
+import Footer from '../components/Footer';
 
 // ── Visual Roadmap ────────────────────────────────────────────────────────────
 
 function ProcessSection({ steps }) {
   return (
-    <section id="process" className="py-28 px-6 border-t border-stone-200 dark:border-white/5 bg-[#f0ede8] dark:bg-black transition-colors duration-300">
-      <div className="max-w-5xl mx-auto">
+    <section id="process" className="py-28 px-6 border-t border-slate-300/70 dark:border-white/5 bg-[#eaedf2] dark:bg-black transition-colors duration-300 relative overflow-hidden">
+      {/* Ambient background glow for glass refraction */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden="true">
+        <div
+          className="absolute -left-20 top-1/4 w-[550px] h-[550px] rounded-full blur-[140px] opacity-20 dark:opacity-15 pointer-events-none"
+          style={{
+            background: 'radial-gradient(circle, #5D72CC 0%, #8b5cf6 50%, transparent 70%)',
+          }}
+        />
+        <div
+          className="absolute -right-20 bottom-1/4 w-[550px] h-[550px] rounded-full blur-[140px] opacity-20 dark:opacity-15 pointer-events-none"
+          style={{
+            background: 'radial-gradient(circle, #38bdf8 0%, #5D72CC 50%, transparent 70%)',
+          }}
+        />
+      </div>
+
+      <div className="max-w-5xl mx-auto relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -19,12 +36,12 @@ function ProcessSection({ steps }) {
           transition={{ duration: 0.8 }}
           className="text-center mb-24"
         >
-          <h2 className="text-3xl sm:text-5xl font-black text-stone-900 dark:text-white tracking-tighter mb-4">How We Build</h2>
-          <p className="text-stone-500 dark:text-neutral-400 text-lg max-w-xl mx-auto">A clear, structured journey from idea to launch.</p>
+          <h2 className="text-3xl sm:text-5xl font-black text-slate-900 dark:text-white tracking-tighter mb-4">How We Build</h2>
+          <p className="text-slate-600 dark:text-neutral-400 text-lg max-w-xl mx-auto">A clear, structured journey from idea to launch.</p>
         </motion.div>
 
         <div className="relative">
-          <div className="absolute left-1/2 -translate-x-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-transparent via-stone-300/50 dark:via-white/20 to-transparent hidden md:block" />
+          <div className="absolute left-1/2 -translate-x-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-transparent via-slate-300/70 dark:via-white/20 to-transparent hidden md:block" />
 
           <div className="space-y-0">
             {steps.map((step, i) => {
@@ -41,22 +58,25 @@ function ProcessSection({ steps }) {
                   className={`relative flex items-center gap-0 md:gap-10 ${isLeft ? 'md:flex-row' : 'md:flex-row-reverse'} flex-row pb-16`}
                 >
                   <div className={`w-full md:w-[calc(50%-2.5rem)] group`}>
-                    <div className="relative p-6 rounded-2xl bg-[#faf8f5] dark:bg-white/3 border border-stone-200 dark:border-white/10 hover:border-stone-300 dark:hover:border-white/25 hover:bg-stone-50 dark:hover:bg-white/5 transition-all duration-400 overflow-hidden shadow-[0_2px_12px_rgba(28,26,23,0.05)] dark:shadow-none">
-                      <span className="absolute top-4 right-4 text-6xl font-black text-stone-900/5 dark:text-white/4 select-none leading-none">
+                    <div className="relative p-6 md:p-7 rounded-3xl bg-white/45 dark:bg-white/[0.035] backdrop-blur-2xl border border-white/75 dark:border-white/10 hover:border-white/95 dark:hover:border-white/25 hover:bg-white/60 dark:hover:bg-white/[0.06] transition-all duration-400 overflow-hidden shadow-[0_8px_32px_rgba(15,23,42,0.06),inset_0_1px_1px_rgba(255,255,255,0.9)] dark:shadow-[0_8px_32px_rgba(0,0,0,0.5),inset_0_1px_1px_rgba(255,255,255,0.08)]">
+                      {/* Top specular sheen */}
+                      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/80 dark:via-white/20 to-transparent pointer-events-none" />
+
+                      <span className="absolute top-4 right-5 text-6xl font-black text-slate-900/5 dark:text-white/4 select-none leading-none">
                         {String(i + 1).padStart(2, '0')}
                       </span>
 
                       <div className="relative z-10">
-                        <div className="w-10 h-10 rounded-xl bg-stone-100 dark:bg-black border border-stone-200 dark:border-white/10 group-hover:border-stone-400 dark:group-hover:border-white/30 flex items-center justify-center mb-4 transition-colors duration-300">
-                          <Icon className="w-5 h-5 text-stone-500 dark:text-white/50 group-hover:text-stone-800 dark:group-hover:text-white transition-colors duration-300" />
+                        <div className="w-11 h-11 rounded-2xl bg-white/65 dark:bg-white/[0.06] backdrop-blur-md border border-white/80 dark:border-white/15 shadow-[inset_0_1px_1px_rgba(255,255,255,0.8)] dark:shadow-none flex items-center justify-center mb-4 group-hover:scale-105 transition-transform duration-300">
+                          <Icon className="w-5 h-5 text-slate-700 dark:text-white transition-colors duration-300" />
                         </div>
-                        <p className="text-xs font-bold text-stone-400/60 dark:text-white/25 tracking-[0.2em] mb-2 uppercase">Step {String(i + 1).padStart(2, '0')}</p>
-                        <h3 className="text-lg font-bold text-stone-900 dark:text-white mb-2 tracking-tight">{step.title}</h3>
-                        <p className="text-stone-500 dark:text-neutral-400 text-sm leading-relaxed">{step.desc}</p>
+                        <p className="text-xs font-bold text-slate-500/80 dark:text-white/35 tracking-[0.2em] mb-2 uppercase">Step {String(i + 1).padStart(2, '0')}</p>
+                        <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2 tracking-tight">{step.title}</h3>
+                        <p className="text-slate-600 dark:text-neutral-400 text-sm leading-relaxed">{step.desc}</p>
                       </div>
                     </div>
 
-                    <div className={`hidden md:block absolute top-1/2 -translate-y-1/2 h-px w-10 bg-stone-300/50 dark:bg-white/15 ${isLeft ? 'right-0 translate-x-full' : 'left-0 -translate-x-full'}`} />
+                    <div className={`hidden md:block absolute top-1/2 -translate-y-1/2 h-px w-10 bg-slate-300/70 dark:bg-white/15 ${isLeft ? 'right-0 translate-x-full' : 'left-0 -translate-x-full'}`} />
                   </div>
 
                   <div className="hidden md:flex absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 flex-col items-center z-10">
@@ -65,9 +85,9 @@ function ProcessSection({ steps }) {
                       whileInView={{ scale: 1 }}
                       viewport={{ once: true }}
                       transition={{ duration: 0.4, delay: i * 0.1 + 0.3, type: 'spring', stiffness: 200 }}
-                      className="w-10 h-10 rounded-full bg-[#faf8f5] dark:bg-black border-2 border-stone-300 dark:border-white/30 flex items-center justify-center shadow-[0_2px_12px_rgba(28,26,23,0.08)] dark:shadow-[0_0_20px_rgba(255,255,255,0.08)]"
+                      className="w-10 h-10 rounded-full bg-white/55 dark:bg-white/5 backdrop-blur-xl border border-white/80 dark:border-white/20 flex items-center justify-center shadow-[0_4px_16px_rgba(15,23,42,0.08),inset_0_1px_1px_rgba(255,255,255,0.9)] dark:shadow-[0_4px_16px_rgba(0,0,0,0.5),inset_0_1px_1px_rgba(255,255,255,0.1)]"
                     >
-                      <span className="text-stone-700 dark:text-white text-xs font-black">{i + 1}</span>
+                      <span className="text-slate-900 dark:text-white text-xs font-black">{i + 1}</span>
                     </motion.div>
                   </div>
 
@@ -106,7 +126,7 @@ const TECH_ICON_URLS = {
   'Redis': `${DI}/redis/redis-original.svg`,
   'Vite': `${DI}/vitejs/vitejs-original.svg`,
   'REST API': `${SI}/openapiinitiative/6BA539`,
-  'AWS': `${DI}/amazonwebservices/amazonwebservices-plain-wordmark.svg`,
+  'AWS': '/aws.svg',
   // UI / UX
   'Figma': `${DI}/figma/figma-original.svg`,
   'Adobe XD': `${SI}/adobexd/FF61F6`,
@@ -166,6 +186,119 @@ const TECH_ICON_URLS = {
 
 
 
+// ── Reliable built-in tech badge components (guarantees 0 broken images) ────
+const CUSTOM_TECH_ICONS = {
+  'OpenAI': ({ size }) => (
+    <svg viewBox="0 0 24 24" fill="currentColor" style={{ width: size, height: size }} className="text-stone-900 dark:text-white">
+      <path d="M22.282 9.821a5.985 5.985 0 0 0-.516-4.91 6.046 6.046 0 0 0-6.51-2.9A6.065 6.065 0 0 0 10.5.42a6.045 6.045 0 0 0-5.772 4.212 5.984 5.984 0 0 0-4.04 2.926 6.058 6.058 0 0 0 .614 7.106 5.988 5.988 0 0 0 .517 4.91 6.054 6.054 0 0 0 6.51 2.9A6.057 6.057 0 0 0 13.5 23.58a6.044 6.044 0 0 0 5.772-4.212 5.985 5.985 0 0 0 4.04-2.926 6.056 6.056 0 0 0-.614-7.106zm-7.608 12.184a4.53 4.53 0 0 1-2.73-1.018l.128-.073 4.417-2.55a.77.77 0 0 0 .385-.667v-6.223l1.884 1.088a.07.07 0 0 1 .038.051v5.184a4.55 4.55 0 0 1-4.122 4.208zm-9.33-4.103a4.52 4.52 0 0 1-.548-2.863l.128.075 4.416 2.55a.76.76 0 0 0 .77 0l5.39-3.111v2.175a.07.07 0 0 1-.027.058l-4.49 2.593a4.55 4.55 0 0 1-5.639-.477zm-1.722-9.288a4.52 4.52 0 0 1 2.182-1.845v5.247a.76.76 0 0 0 .385.666l5.39 3.112-1.884 1.088a.07.07 0 0 1-.064 0l-4.49-2.593a4.55 4.55 0 0 1-1.519-5.675zm13.626 2.553-5.39-3.112 1.884-1.088a.07.07 0 0 1 .064 0l4.49 2.593a4.55 4.55 0 0 1 1.519 5.675 4.52 4.52 0 0 1-2.182 1.845v-5.247a.76.76 0 0 0-.385-.666zm2.27 4.103a4.52 4.52 0 0 1 .548 2.863l-.128-.075-4.416-2.55a.76.76 0 0 0-.77 0l-5.39 3.111v-2.175a.07.07 0 0 1 .027-.058l4.49-2.593a4.55 4.55 0 0 1 5.639.477zm-9.873-5.64 2.37-1.368 2.37 1.369v2.737l-2.37 1.369-2.37-1.369z"/>
+    </svg>
+  ),
+  'Adobe XD': ({ size }) => (
+    <div
+      style={{ width: size, height: size }}
+      className="rounded-xl bg-[#470137] border border-[#FF61F6]/60 flex items-center justify-center font-black text-[#FF61F6] text-xs select-none shadow-sm"
+    >
+      Xd
+    </div>
+  ),
+  'Zeplin': ({ size }) => (
+    <div
+      style={{ width: size, height: size }}
+      className="rounded-xl bg-[#2e2003] border border-[#FDBD39]/60 flex items-center justify-center font-black text-[#FDBD39] text-xs select-none shadow-sm"
+    >
+      Zp
+    </div>
+  ),
+  'Protopie': ({ size }) => (
+    <div
+      style={{ width: size, height: size }}
+      className="rounded-xl bg-[#1e0a3c] border border-[#8844EE]/60 flex items-center justify-center font-black text-[#8844EE] text-xs select-none shadow-sm"
+    >
+      Pp
+    </div>
+  ),
+  'WCAG': ({ size }) => (
+    <div
+      style={{ width: size, height: size }}
+      className="rounded-xl bg-[#021d33] border border-[#38bdf8]/60 flex items-center justify-center font-black text-[#38bdf8] text-[9px] tracking-tighter select-none shadow-sm"
+    >
+      WCAG
+    </div>
+  ),
+  'TestFlight': ({ size }) => (
+    <div
+      style={{ width: size, height: size }}
+      className="rounded-xl bg-[#041a30] border border-[#0D83F6]/60 flex items-center justify-center font-black text-[#0D83F6] text-xs select-none shadow-sm"
+    >
+      TF
+    </div>
+  ),
+  'Nmap': ({ size }) => (
+    <div
+      style={{ width: size, height: size }}
+      className="rounded-xl bg-[#081a28] border border-[#4B8BBE]/60 flex items-center justify-center font-black text-[#4B8BBE] text-[9px] tracking-tight select-none shadow-sm"
+    >
+      NMAP
+    </div>
+  ),
+  'REST API': ({ size }) => (
+    <div
+      style={{ width: size, height: size }}
+      className="rounded-xl bg-[#10220a] border border-[#6BA539]/60 flex items-center justify-center font-black text-[#6BA539] text-[9px] select-none shadow-sm"
+    >
+      REST
+    </div>
+  ),
+  'Burp Suite': ({ size }) => (
+    <div
+      style={{ width: size, height: size }}
+      className="rounded-xl bg-[#2e1003] border border-[#FF6633]/60 flex items-center justify-center font-black text-[#FF6633] text-xs select-none shadow-sm"
+    >
+      BS
+    </div>
+  ),
+  'Metasploit': ({ size }) => (
+    <div
+      style={{ width: size, height: size }}
+      className="rounded-xl bg-[#061822] border border-[#2596CD]/60 flex items-center justify-center font-black text-[#2596CD] text-xs select-none shadow-sm"
+    >
+      MS
+    </div>
+  ),
+  'OWASP ZAP': ({ size }) => (
+    <div
+      style={{ width: size, height: size }}
+      className="rounded-xl bg-[#2b0507] border border-[#E3001B]/60 flex items-center justify-center font-black text-[#E3001B] text-[9px] select-none shadow-sm"
+    >
+      ZAP
+    </div>
+  ),
+  'RevenueCat': ({ size }) => (
+    <div
+      style={{ width: size, height: size }}
+      className="rounded-xl bg-[#260a08] border border-[#E04B3A]/60 flex items-center justify-center font-black text-[#E04B3A] text-xs select-none shadow-sm"
+    >
+      RC
+    </div>
+  ),
+  'Stripe SDK': ({ size }) => (
+    <div
+      style={{ width: size, height: size }}
+      className="rounded-xl bg-[#120e36] border border-[#635BFF]/60 flex items-center justify-center font-black text-[#635BFF] text-xs select-none shadow-sm"
+    >
+      S
+    </div>
+  ),
+  'Fail2ban': ({ size }) => (
+    <div
+      style={{ width: size, height: size }}
+      className="rounded-xl bg-[#2b0000] border border-[#CC0000]/60 flex items-center justify-center font-black text-[#CC0000] text-[9px] select-none shadow-sm"
+    >
+      F2B
+    </div>
+  ),
+};
+
 // ─────────────────────────────────────────────────────────────────────────────
 // FloatingBadge — pure CSS animation, zero JS timing bugs.
 //
@@ -183,6 +316,7 @@ const TECH_ICON_URLS = {
 //   Result: hero looks fully populated the instant the page loads.
 // ─────────────────────────────────────────────────────────────────────────────
 function FloatingBadge({ tech, index }) {
+  const [imgFailed, setImgFailed] = useState(false);
   const r = (n) => seededRand(index * 31 + n);
 
   const size     = Math.round(52 + r(0) * 22);  // 52–74 px circle
@@ -193,7 +327,9 @@ function FloatingBadge({ tech, index }) {
   const sw2      = Math.round((r(5)  - 0.5) * 70);
   const sw3      = Math.round((r(6)  - 0.5) * 40);
 
-  const iconUrl  = TECH_ICON_URLS[tech.label];
+  const iconUrl    = TECH_ICON_URLS[tech.label];
+  const CustomIcon = CUSTOM_TECH_ICONS[tech.label];
+  const iconSize   = Math.round(size * 0.54);
   // CSS-safe animation name (no spaces / special chars)
   const animName = `br${index}${tech.label.replace(/\W/g, '')}`;
 
@@ -258,22 +394,36 @@ function FloatingBadge({ tech, index }) {
             className="absolute -top-2 -left-2 w-8 h-8 rounded-full opacity-20 blur-md"
             style={{ background: 'white' }}
           />
-          {/* Icon — real SVG or coloured first-letter fallback */}
-          {iconUrl ? (
+          {/* Icon rendering priority:
+              1. Reliable built-in custom SVG/Badge component (zero network, 100% reliable)
+              2. Real SVG image from CDN (with onError fallback)
+              3. Clean styled typography monogram (never broken browser image!) */}
+          {CustomIcon ? (
+            <div className="relative z-10 flex items-center justify-center">
+              <CustomIcon size={iconSize} />
+            </div>
+          ) : iconUrl && !imgFailed ? (
             <img
               src={iconUrl}
-              alt={tech.label}
+              alt=""
               draggable={false}
+              onError={() => setImgFailed(true)}
               className="relative z-10 object-contain"
-              style={{ width: Math.round(size * 0.54), height: Math.round(size * 0.54) }}
+              style={{ width: iconSize, height: iconSize }}
             />
           ) : (
-            <span
-              className="relative z-10 font-black leading-none"
-              style={{ fontSize: Math.round(size * 0.38), color: tech.color }}
+            <div
+              className="relative z-10 rounded-full flex items-center justify-center font-black uppercase tracking-tight select-none"
+              style={{
+                width: iconSize,
+                height: iconSize,
+                fontSize: Math.round(size * 0.30),
+                color: tech.color,
+                textShadow: `0 0 10px ${tech.color}66`,
+              }}
             >
-              {tech.label[0]}
-            </span>
+              {tech.label.slice(0, 3)}
+            </div>
           )}
         </div>
       </div>
@@ -281,7 +431,7 @@ function FloatingBadge({ tech, index }) {
   );
 }
 // ── Hero ─────────────────────────────────────────────────────────────────────
-function HeroSection({ service }) {
+function HeroSection({ service, onBookConsultation }) {
   const techStack = service.techStack || [];
   // On small screens show fewer badges; on desktop show all
   const visibleStack = typeof window !== 'undefined' && window.innerWidth < 768
@@ -290,7 +440,7 @@ function HeroSection({ service }) {
 
 
   return (
-    <section className="relative min-h-screen flex flex-col items-center justify-center text-center px-6 overflow-hidden bg-[#f0ede8] dark:bg-black transition-colors duration-300">
+    <section className="relative min-h-screen flex flex-col items-center justify-center text-center px-6 overflow-hidden bg-[#eaedf2] dark:bg-black transition-colors duration-300">
 
       {/* Ambient glow */}
       <div className="absolute inset-0 pointer-events-none">
@@ -320,24 +470,36 @@ function HeroSection({ service }) {
           animate={{ scale: 1, opacity: 1 }}
           transition={{ duration: 0.8, delay: 0.2 }}
         >
-          {/* <div className="w-18 h-18 rounded-3xl bg-stone-100 dark:bg-white/5 border border-stone-200 dark:border-white/10 flex items-center justify-center shadow-[0_4px_24px_rgba(28,26,23,0.08)] dark:shadow-none"
-            style={{ width: 72, height: 72 }}
-          >
-            <service.icon className="w-9 h-9 text-stone-700 dark:text-white" />
-          </div> */}
         </motion.div>
 
-        <h1 className="text-5xl sm:text-7xl lg:text-8xl font-black text-stone-900 dark:text-white tracking-tighter leading-none mb-7">
+        <h1 className="text-5xl sm:text-7xl lg:text-8xl font-black text-slate-900 dark:text-white tracking-tighter leading-none mb-7">
           {service.title}
         </h1>
 
-        <p className="text-xl sm:text-2xl text-stone-600 dark:text-neutral-300 font-medium tracking-tight mb-5 whitespace-pre-line leading-snug">
+        <p className="text-xl sm:text-2xl text-slate-700 dark:text-neutral-300 font-medium tracking-tight mb-5 whitespace-pre-line leading-snug">
           {service.tagline}
         </p>
 
-        <p className="text-sm sm:text-base lg:text-lg text-stone-400 dark:text-neutral-500 max-w-xl mx-auto leading-relaxed mb-10">
+        <p className="text-sm sm:text-base lg:text-lg text-slate-500 dark:text-neutral-500 max-w-xl mx-auto leading-relaxed mb-8">
           {service.subtext}
         </p>
+
+        {/* Action CTAs */}
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-3.5 mb-10">
+          <button
+            onClick={onBookConsultation}
+            className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full bg-slate-900 dark:bg-white text-white dark:text-black text-sm font-bold tracking-wide hover:bg-slate-800 dark:hover:bg-neutral-200 hover:scale-105 transition-all duration-300 shadow-[0_4px_24px_rgba(15,23,42,0.18)] dark:shadow-[0_0_35px_rgba(255,255,255,0.15)]"
+          >
+            <Rocket className="w-4 h-4 text-[#5D72CC]" />
+            <span>Book Consultation</span>
+          </button>
+          <Link
+            to={`/contact?service=${service.slug}`}
+            className="px-8 py-3.5 rounded-full border border-slate-300/80 dark:border-white/20 text-slate-800 dark:text-white text-sm font-bold bg-white/40 dark:bg-white/5 hover:bg-white/80 dark:hover:bg-white/10 backdrop-blur-sm transition-all duration-300"
+          >
+            Inquire via Contact Page →
+          </Link>
+        </div>
 
         {/* Quick-read tech pills row */}
         {/* {techStack.length > 0 && (
@@ -385,7 +547,7 @@ function HeroSection({ service }) {
 
 function FeaturesSection({ features }) {
   return (
-    <section id="features" className="py-28 px-6 border-t border-stone-200 dark:border-white/5 bg-[#f0ede8] dark:bg-black transition-colors duration-300">
+    <section id="features" className="py-28 px-6 border-t border-slate-300/70 dark:border-white/5 bg-[#eaedf2] dark:bg-black transition-colors duration-300">
       <div className="max-w-6xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -394,8 +556,8 @@ function FeaturesSection({ features }) {
           transition={{ duration: 0.8 }}
           className="text-center mb-20"
         >
-          <h2 className="text-3xl sm:text-5xl font-black text-stone-900 dark:text-white tracking-tighter mb-4">What's Included</h2>
-          <p className="text-stone-500 dark:text-neutral-400 text-lg max-w-xl mx-auto">Everything you need, nothing you don't.</p>
+          <h2 className="text-3xl sm:text-5xl font-black text-slate-900 dark:text-white tracking-tighter mb-4">What's Included</h2>
+          <p className="text-slate-600 dark:text-neutral-400 text-lg max-w-xl mx-auto">Everything you need, nothing you don't.</p>
         </motion.div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -408,13 +570,16 @@ function FeaturesSection({ features }) {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: i * 0.08 }}
-                className="group p-6 rounded-2xl bg-[#faf8f5] dark:bg-white/3 border border-stone-200 dark:border-white/10 hover:bg-stone-50 dark:hover:bg-white/6 hover:border-stone-300 dark:hover:border-white/20 transition-all duration-300 shadow-[0_2px_12px_rgba(28,26,23,0.05)] dark:shadow-none"
+                className="group p-6 rounded-3xl bg-white/45 dark:bg-white/[0.035] backdrop-blur-2xl border border-white/75 dark:border-white/10 hover:border-white/95 dark:hover:border-white/25 hover:bg-white/60 dark:hover:bg-white/[0.06] transition-all duration-300 shadow-[0_8px_32px_rgba(15,23,42,0.05),inset_0_1px_1px_rgba(255,255,255,0.9)] dark:shadow-[0_8px_32px_rgba(0,0,0,0.5),inset_0_1px_1px_rgba(255,255,255,0.08)] relative overflow-hidden"
               >
-                <div className="w-10 h-10 rounded-xl bg-stone-100 dark:bg-black border border-stone-200 dark:border-white/10 flex items-center justify-center mb-4 group-hover:border-stone-400 dark:group-hover:border-white/30 transition-colors duration-300">
-                  <Icon className="w-5 h-5 text-stone-500 dark:text-white/60 group-hover:text-stone-800 dark:group-hover:text-white transition-colors duration-300" />
+                {/* Top specular sheen */}
+                <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/80 dark:via-white/20 to-transparent pointer-events-none" />
+
+                <div className="w-11 h-11 rounded-2xl bg-white/65 dark:bg-white/[0.06] backdrop-blur-md border border-white/80 dark:border-white/15 flex items-center justify-center mb-4 shadow-[inset_0_1px_1px_rgba(255,255,255,0.8)] dark:shadow-none group-hover:scale-105 transition-transform duration-300">
+                  <Icon className="w-5 h-5 text-slate-700 dark:text-white transition-colors duration-300" />
                 </div>
-                <h3 className="text-stone-900 dark:text-white font-bold mb-1 tracking-tight">{feature.title}</h3>
-                <p className="text-stone-500 dark:text-neutral-500 text-sm leading-relaxed">{feature.desc}</p>
+                <h3 className="text-slate-900 dark:text-white font-bold mb-1 tracking-tight">{feature.title}</h3>
+                <p className="text-slate-600 dark:text-neutral-500 text-sm leading-relaxed">{feature.desc}</p>
               </motion.div>
             );
           })}
@@ -429,15 +594,15 @@ function FeaturesSection({ features }) {
 const tierConfig = [
   {
     // Starter — light & dark styles
-    lightBg: 'bg-stone-50',
-    lightBorder: 'border-stone-200',
-    lightTitle: 'text-stone-900',
-    lightText: 'text-stone-500',
-    lightFeature: 'text-stone-600',
-    lightCheckBg: 'bg-stone-100 border-stone-200',
-    lightCheckColor: 'text-stone-500',
-    lightBadge: 'text-stone-400',
-    icon: Star,
+    lightBg: 'bg-white/90 backdrop-blur-md',
+    lightBorder: 'border-slate-300/80',
+    lightTitle: 'text-slate-900',
+    lightText: 'text-slate-600',
+    lightFeature: 'text-slate-700',
+    lightCheckBg: 'bg-slate-100 border-slate-300/80',
+    lightCheckColor: 'text-slate-600',
+    lightBadge: 'text-slate-500',
+    icon: Package,
     // dark styles (unchanged)
     glow: 'rgba(148,163,184,0.12)',
     accent: 'from-slate-400/20 to-slate-600/5',
@@ -484,7 +649,7 @@ const tierConfig = [
 
 function PricingSection({ pricing, onBookConsultation }) {
   return (
-    <section id="pricing" className="py-28 px-6 border-t border-stone-200 dark:border-white/5 relative overflow-hidden bg-[#f0ede8] dark:bg-black transition-colors duration-300">
+    <section id="pricing" className="py-28 px-6 border-t border-slate-300/70 dark:border-white/5 relative overflow-hidden bg-[#eaedf2] dark:bg-black transition-colors duration-300">
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[400px] bg-violet-600/5 blur-[120px] rounded-full pointer-events-none" />
 
       <div className="max-w-6xl mx-auto relative z-10">
@@ -495,8 +660,8 @@ function PricingSection({ pricing, onBookConsultation }) {
           transition={{ duration: 0.8 }}
           className="text-center mb-20"
         >
-          <h2 className="text-3xl sm:text-5xl font-black text-stone-900 dark:text-white tracking-tighter mb-4">Simple, Honest Pricing</h2>
-          <p className="text-stone-500 dark:text-neutral-400 text-lg max-w-xl mx-auto">No hidden fees. Pick the plan that fits your stage.</p>
+          <h2 className="text-3xl sm:text-5xl font-black text-slate-900 dark:text-white tracking-tighter mb-4">Simple, Honest Pricing</h2>
+          <p className="text-slate-600 dark:text-neutral-400 text-lg max-w-xl mx-auto">No hidden fees. Pick the plan that fits your stage.</p>
         </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-center">
@@ -552,7 +717,7 @@ function PricingSection({ pricing, onBookConsultation }) {
                   </div>
 
                   <button
-                    onClick={onBookConsultation}
+                    onClick={() => onBookConsultation(plan)}
                     className={`w-full py-3.5 rounded-2xl text-sm font-black tracking-wide flex items-center justify-center gap-2 transition-all duration-300 ${isHighlight
                       ? 'bg-violet-600 text-white hover:bg-violet-700 shadow-[0_4px_20px_rgba(139,92,246,0.4)] hover:shadow-[0_4px_30px_rgba(139,92,246,0.6)]'
                       : 'bg-stone-900 text-white hover:bg-stone-800 border border-stone-200'
@@ -621,7 +786,7 @@ function PricingSection({ pricing, onBookConsultation }) {
                           <motion.button
                             whileHover={{ scale: 1.03 }}
                             whileTap={{ scale: 0.97 }}
-                            onClick={onBookConsultation}
+                            onClick={() => onBookConsultation(plan)}
                             className="w-full py-4 rounded-2xl text-sm font-black tracking-wide bg-white text-black flex items-center justify-center gap-2 shadow-[0_0_25px_rgba(255,255,255,0.25)] hover:shadow-[0_0_45px_rgba(255,255,255,0.4)] transition-all duration-300"
                           >
                             {plan.cta} <ArrowRight className="w-4 h-4" />
@@ -630,7 +795,7 @@ function PricingSection({ pricing, onBookConsultation }) {
                           <motion.button
                             whileHover={{ scale: 1.02 }}
                             whileTap={{ scale: 0.98 }}
-                            onClick={onBookConsultation}
+                            onClick={() => onBookConsultation(plan)}
                             className="w-full py-4 rounded-2xl text-sm font-bold tracking-wide border border-white/15 text-neutral-300 hover:text-white hover:border-white/30 hover:bg-white/5 flex items-center justify-center gap-2 transition-all duration-300"
                           >
                             {plan.cta} <ArrowRight className="w-4 h-4" />
@@ -656,7 +821,7 @@ function FAQSection({ faq }) {
   const [openIndex, setOpenIndex] = useState(null);
 
   return (
-    <section id="faq" className="py-28 px-6 border-t border-stone-200 dark:border-white/5 bg-[#f0ede8] dark:bg-black transition-colors duration-300">
+    <section id="faq" className="py-28 px-6 border-t border-slate-300/70 dark:border-white/5 bg-[#eaedf2] dark:bg-black transition-colors duration-300">
       <div className="max-w-3xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -665,7 +830,7 @@ function FAQSection({ faq }) {
           transition={{ duration: 0.8 }}
           className="text-center mb-16"
         >
-          <h2 className="text-3xl sm:text-5xl font-black text-stone-900 dark:text-white tracking-tighter mb-4">Common Questions</h2>
+          <h2 className="text-3xl sm:text-5xl font-black text-slate-900 dark:text-white tracking-tighter mb-4">Common Questions</h2>
         </motion.div>
 
         <div className="space-y-3">
@@ -676,16 +841,16 @@ function FAQSection({ faq }) {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: i * 0.08 }}
-              className="rounded-2xl bg-[#faf8f5] dark:bg-white/3 border border-stone-200 dark:border-white/10 overflow-hidden shadow-[0_2px_8px_rgba(28,26,23,0.04)] dark:shadow-none"
+              className="rounded-2xl bg-white/45 dark:bg-white/[0.035] backdrop-blur-xl border border-white/75 dark:border-white/10 overflow-hidden shadow-[0_8px_30px_rgba(15,23,42,0.05),inset_0_1px_1px_rgba(255,255,255,0.9)] dark:shadow-[0_8px_30px_rgba(0,0,0,0.5),inset_0_1px_1px_rgba(255,255,255,0.08)] hover:bg-white/60 dark:hover:bg-white/[0.06] transition-all duration-300"
             >
               <button
                 onClick={() => setOpenIndex(openIndex === i ? null : i)}
-                className="w-full text-left p-6 flex items-center justify-between gap-4 hover:bg-stone-50 dark:hover:bg-white/3 transition-colors duration-200"
+                className="w-full text-left p-6 flex items-center justify-between gap-4 hover:bg-white/30 dark:hover:bg-white/3 transition-colors duration-200"
               >
-                <span className="text-stone-900 dark:text-white font-semibold tracking-tight">{item.q}</span>
+                <span className="text-slate-900 dark:text-white font-semibold tracking-tight">{item.q}</span>
                 {openIndex === i
-                  ? <ChevronUp className="w-5 h-5 text-stone-400 dark:text-neutral-400 shrink-0" />
-                  : <ChevronDown className="w-5 h-5 text-stone-400 dark:text-neutral-400 shrink-0" />
+                  ? <ChevronUp className="w-5 h-5 text-slate-400 dark:text-neutral-400 shrink-0" />
+                  : <ChevronDown className="w-5 h-5 text-slate-400 dark:text-neutral-400 shrink-0" />
                 }
               </button>
               <AnimatePresence>
@@ -697,7 +862,7 @@ function FAQSection({ faq }) {
                     transition={{ duration: 0.3, ease: 'easeInOut' }}
                     className="overflow-hidden"
                   >
-                    <p className="px-6 pb-6 text-stone-500 dark:text-neutral-400 leading-relaxed">{item.a}</p>
+                    <p className="px-6 pb-6 text-slate-600 dark:text-neutral-400 leading-relaxed">{item.a}</p>
                   </motion.div>
                 )}
               </AnimatePresence>
@@ -716,15 +881,21 @@ export default function ServiceDetailPage() {
   const navigate = useNavigate();
   const service = servicesData[slug];
   const [showContact, setShowContact] = useState(false);
+  const [selectedPlan, setSelectedPlan] = useState(null);
+
+  const handleBookConsultation = (plan = null) => {
+    setSelectedPlan(plan);
+    setShowContact(true);
+  };
 
   if (!service) {
     return (
-      <div className="min-h-screen bg-[#f0ede8] dark:bg-black flex flex-col items-center justify-center text-stone-900 dark:text-white gap-6 transition-colors duration-300">
+      <div className="min-h-screen bg-[#eaedf2] dark:bg-black flex flex-col items-center justify-center text-slate-900 dark:text-white gap-6 transition-colors duration-300">
         <h1 className="text-4xl font-black tracking-tighter">Service Not Found</h1>
-        <p className="text-stone-500 dark:text-neutral-400">That service doesn't exist yet.</p>
+        <p className="text-slate-600 dark:text-neutral-400">That service doesn't exist yet.</p>
         <button
           onClick={() => navigate('/')}
-          className="px-8 py-3 rounded-full border border-stone-300 dark:border-white/20 text-stone-700 dark:text-white text-sm font-bold hover:bg-stone-900 dark:hover:bg-white hover:text-white dark:hover:text-black hover:border-stone-900 transition-all duration-300"
+          className="px-8 py-3 rounded-full border border-slate-300 dark:border-white/20 text-slate-800 dark:text-white text-sm font-bold hover:bg-slate-900 dark:hover:bg-white hover:text-white dark:hover:text-black hover:border-slate-900 transition-all duration-300"
         >
           Back to Home
         </button>
@@ -738,42 +909,52 @@ export default function ServiceDetailPage() {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
-      className="relative min-h-screen w-full bg-[#f0ede8] dark:bg-black text-stone-900 dark:text-white overflow-x-hidden transition-colors duration-300"
+      className="relative min-h-screen w-full bg-[#eaedf2] dark:bg-black text-slate-900 dark:text-white overflow-x-hidden transition-colors duration-300"
     >
       <Navbar backTo="/" serviceTitle={service.title} />
 
       <div>
-        <HeroSection service={service} />
+        <HeroSection service={service} onBookConsultation={() => handleBookConsultation(null)} />
         <ProcessSection steps={service.steps} />
         <FeaturesSection features={service.features} />
-        <PricingSection pricing={service.pricing} onBookConsultation={() => setShowContact(true)} />
+        <PricingSection pricing={service.pricing} onBookConsultation={handleBookConsultation} />
         <FAQSection faq={service.faq} />
 
         {/* Footer CTA */}
-        <section className="py-28 px-6 border-t border-stone-200 dark:border-white/5 text-center bg-[#e8e4dd] dark:bg-black transition-colors duration-300">
-          <div className="max-w-2xl mx-auto">
-            <h2 className="text-3xl sm:text-5xl font-black text-stone-900 dark:text-white tracking-tighter mb-6">Ready to Get Started?</h2>
-            <p className="text-stone-500 dark:text-neutral-400 text-lg mb-10">Let's talk about your project. No commitment, no pressure.</p>
+        <section className="py-28 px-6 border-t border-slate-300/70 dark:border-white/5 text-center bg-gradient-to-b from-[#eef1f6] via-[#eaedf2] to-[#e3e7ed] dark:from-black dark:via-black dark:to-black relative overflow-hidden transition-colors duration-300">
+          {/* Subtle metallic silver ambient sheen */}
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(255,255,255,0.75)_0%,_transparent_65%)] dark:bg-none pointer-events-none" />
+
+          <div className="max-w-2xl mx-auto relative z-10">
+            <h2 className="text-3xl sm:text-5xl font-black text-slate-900 dark:text-white tracking-tighter mb-6">Ready to Get Started?</h2>
+            <p className="text-slate-600 dark:text-neutral-400 text-lg mb-10">Let's talk about your project. No commitment, no pressure.</p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <button
-                onClick={() => setShowContact(true)}
-                className="px-10 py-4 rounded-full bg-stone-900 dark:bg-white text-white dark:text-black text-sm font-bold tracking-wide hover:bg-stone-700 dark:hover:bg-neutral-200 hover:scale-105 transition-all duration-300 shadow-[0_0_40px_rgba(28,26,23,0.15)] dark:shadow-[0_0_40px_rgba(255,255,255,0.15)]"
+                onClick={() => handleBookConsultation(null)}
+                className="inline-flex items-center gap-2 px-10 py-4 rounded-full bg-slate-900 dark:bg-white text-white dark:text-black text-sm font-bold tracking-wide hover:bg-slate-800 dark:hover:bg-neutral-200 hover:scale-105 transition-all duration-300 shadow-[0_4px_24px_rgba(15,23,42,0.18)] dark:shadow-[0_0_40px_rgba(255,255,255,0.15)]"
               >
-                🚀 Book a Free Consultation
+                <Rocket className="w-4 h-4 text-[#5D72CC]" />
+                <span>Book a Free Consultation</span>
               </button>
-              <Link to="/" className="px-10 py-4 rounded-full border border-stone-300 dark:border-white/20 text-stone-700 dark:text-white text-sm font-bold hover:bg-stone-100 dark:hover:bg-white/10 transition-all duration-300">
-                Explore All Services
+              <Link
+                to={`/contact?service=${slug}`}
+                className="px-10 py-4 rounded-full border border-slate-300/80 dark:border-white/20 text-slate-800 dark:text-white text-sm font-bold bg-white/50 dark:bg-white/5 hover:bg-white/90 dark:hover:bg-white/10 backdrop-blur-sm transition-all duration-300"
+              >
+                Go to Contact Form →
               </Link>
             </div>
           </div>
         </section>
+
+        <Footer />
       </div>
 
       {/* ── Space Contact Modal ── */}
       <ContactModal
         isOpen={showContact}
-        onClose={() => setShowContact(false)}
+        onClose={() => { setShowContact(false); setSelectedPlan(null); }}
         preselectedService={slug}
+        preselectedPlan={selectedPlan}
       />
     </motion.div>
   );

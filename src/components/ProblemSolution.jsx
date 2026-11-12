@@ -13,12 +13,33 @@ const problemSolutions = [
 
 export default function ProblemSolution() {
   return (
-    <section className="w-full bg-[#f0ede8] dark:bg-black py-15 sm:py-28 md:py-15 flex items-center justify-center relative z-10 px-4 sm:px-6 overflow-hidden transition-colors duration-300">
+    <section className="w-full bg-[#eaedf2] dark:bg-black py-15 sm:py-28 md:py-15 flex items-center justify-center relative z-10 px-4 sm:px-6 overflow-hidden transition-colors duration-300">
 
-      {/* Background Ambience */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-5xl h-full pointer-events-none">
-        <div className="absolute top-[20%] left-0 w-[450px] h-[450px] bg-red-500/6 dark:bg-red-900/10 blur-[140px] rounded-full" />
-        <div className="absolute top-[60%] right-0 w-[450px] h-[450px] bg-violet-500/6 dark:bg-violet-900/10 blur-[140px] rounded-full" />
+      {/* Background Ambience: Tasteful, refined ambient splash effect */}
+      <div className="absolute inset-0 w-full h-full pointer-events-none overflow-hidden" aria-hidden="true">
+        {/* Left Side: Soft ambient red splash */}
+        <div
+          className="absolute -left-20 top-1/4 w-[520px] h-[680px] rounded-full blur-[140px] opacity-[0.16] dark:opacity-[0.18] pointer-events-none"
+          style={{
+            background: 'radial-gradient(circle, #ef4444 0%, #f43f5e 45%, transparent 70%)',
+          }}
+        />
+
+        {/* Right Side: Soft ambient violet splash */}
+        <div
+          className="absolute -right-20 top-1/3 w-[520px] h-[680px] rounded-full blur-[140px] opacity-[0.16] dark:opacity-[0.20] pointer-events-none"
+          style={{
+            background: 'radial-gradient(circle, #8b5cf6 0%, #a855f7 45%, transparent 70%)',
+          }}
+        />
+
+        {/* Center subtle bridging splash */}
+        <div
+          className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full blur-[150px] opacity-[0.08] dark:opacity-[0.12] pointer-events-none"
+          style={{
+            background: 'radial-gradient(circle, rgba(168,85,247,0.4) 0%, rgba(239,68,68,0.2) 50%, transparent 70%)',
+          }}
+        />
       </div>
 
       <div className="max-w-7xl w-full mx-auto relative z-10">
@@ -29,7 +50,6 @@ export default function ProblemSolution() {
           className="mb-20 md:mb-28 text-center flex flex-col items-center"
         >
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-stone-200 dark:bg-white/5 border border-stone-300 dark:border-white/10 text-stone-500 dark:text-neutral-500 text-xs font-bold tracking-widest uppercase mb-5">
-            <span className="w-1.5 h-1.5 rounded-full bg-violet-500" />
             How We Think
           </div>
           <h2 className="text-4xl sm:text-5xl md:text-7xl font-black text-stone-900 dark:text-white tracking-tighter mb-6">Evolution Paradigm.</h2>
@@ -55,33 +75,36 @@ export default function ProblemSolution() {
                   transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
                   className="w-full relative order-1"
                 >
-                  <div className="h-full p-6 md:p-8 rounded-3xl bg-red-50/60 dark:bg-neutral-950 border border-red-200/50 dark:border-red-500/10 md:group-hover:border-red-300/60 dark:md:group-hover:border-red-500/30 transition-colors duration-500 flex flex-col justify-center relative overflow-hidden shadow-[0_2px_12px_rgba(239,68,68,0.06)] dark:shadow-none">
-                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(220,38,38,0.05),transparent)] pointer-events-none" />
+                  <div className="h-full p-6 md:p-8 rounded-3xl bg-white/45 dark:bg-white/[0.035] backdrop-blur-xl border border-white/60 dark:border-white/10 md:group-hover:border-red-400/40 dark:md:group-hover:border-red-500/30 transition-all duration-500 flex flex-col justify-center relative overflow-hidden shadow-[0_8px_30px_rgba(28,26,23,0.04),inset_0_1px_1px_rgba(255,255,255,0.8)] dark:shadow-[0_8px_30px_rgba(0,0,0,0.4),inset_0_1px_1px_rgba(255,255,255,0.06)] hover:bg-white/60 dark:hover:bg-white/[0.06]">
+                    <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/80 dark:via-white/15 to-transparent pointer-events-none" />
+                    {/* Subtle red corner splash */}
+                    <div className="absolute -top-10 -left-10 w-36 h-36 rounded-full bg-red-500/10 dark:bg-red-500/15 blur-2xl pointer-events-none opacity-50 group-hover:opacity-100 transition-opacity duration-500" />
 
-                    <span className="text-[10px] md:text-xs uppercase tracking-[0.2em] font-bold text-red-500/70 dark:text-red-500/50 mb-4 inline-flex items-center gap-2">
-                      <div className="w-1.5 h-1.5 rounded-full bg-red-500/70 dark:bg-red-500/50" />
+                    <span className="text-[10px] md:text-xs uppercase tracking-[0.2em] font-bold text-red-500/80 dark:text-red-400/80 mb-4 inline-flex items-center gap-2 relative z-10">
+                      <div className="w-1.5 h-1.5 rounded-full bg-red-500 shadow-[0_0_5px_rgba(239,68,68,0.4)]" />
                       The Friction
                     </span>
-                    <p className="text-base md:text-lg lg:text-xl text-stone-600 dark:text-neutral-400 font-medium leading-relaxed group-hover:text-stone-800 dark:group-hover:text-neutral-300 transition-colors duration-500">
+                    <p className="text-base md:text-lg lg:text-xl text-stone-600 dark:text-neutral-400 font-medium leading-relaxed group-hover:text-stone-900 dark:group-hover:text-neutral-200 transition-colors duration-500 relative z-10">
                       {item.problem}
                     </p>
                   </div>
                 </motion.div>
 
-                {/* Desktop Center Node */}
+                {/* Desktop Center Node: Left side Red, Right side Purple */}
                 <motion.div
                   initial={{ scale: 0 }}
                   whileInView={{ scale: 1 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.5, delay: 0.2 }}
-                  className="hidden md:flex w-12 h-12 rounded-full border border-stone-200 dark:border-white/10 bg-[#faf8f5] dark:bg-black items-center justify-center relative z-10 order-2 self-center shrink-0 shadow-[0_2px_12px_rgba(28,26,23,0.06)] dark:shadow-none"
+                  className="hidden md:flex w-10 h-10 md:w-11 md:h-11 rounded-full border border-white/70 dark:border-white/15 bg-white/60 dark:bg-white/5 backdrop-blur-xl items-center justify-center relative z-10 order-2 self-center shrink-0 shadow-sm md:group-hover:border-white/90 dark:md:group-hover:border-white/30 transition-all duration-300"
                 >
-                  <div className="w-3 h-3 rounded-full bg-stone-300 dark:bg-neutral-700 group-hover:bg-gradient-to-r group-hover:from-violet-500 group-hover:to-fuchsia-500 group-hover:scale-[1.8] transition-all duration-500 shadow-[0_0_0px_rgba(168,85,247,0)] group-hover:shadow-[0_0_20px_rgba(168,85,247,0.8)]" />
+                  {/* Inner Node: Clean, crisp Red to Purple dot */}
+                  <div className="w-3.5 h-3.5 rounded-full bg-gradient-to-r from-red-500 to-violet-600 opacity-90 group-hover:opacity-100 group-hover:scale-115 transition-all duration-300" />
                 </motion.div>
 
                 {/* Mobile Arrow */}
                 <div className="md:hidden flex justify-center -my-3 relative z-10 order-2">
-                  <div className="w-8 h-8 rounded-full bg-[#faf8f5] dark:bg-black border border-stone-200 dark:border-white/10 flex items-center justify-center text-stone-400 dark:text-white/50">
+                  <div className="w-8 h-8 rounded-full bg-white/50 dark:bg-white/5 backdrop-blur-xl border border-white/60 dark:border-white/15 flex items-center justify-center text-stone-500 dark:text-white/60">
                     <ArrowDown className="w-4 h-4" />
                   </div>
                 </div>
@@ -94,14 +117,18 @@ export default function ProblemSolution() {
                   transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
                   className="w-full relative order-3"
                 >
-                  <div className="h-full p-6 md:p-8 rounded-3xl bg-violet-50/50 dark:bg-neutral-950 border border-violet-200/40 dark:border-violet-500/20 md:group-hover:border-violet-300/60 dark:md:group-hover:border-violet-400/50 transition-colors duration-500 flex flex-col justify-center relative overflow-hidden shadow-[0_2px_12px_rgba(139,92,246,0.06)] dark:shadow-none">
-                    <div className="absolute top-0 left-0 w-[200%] h-px bg-gradient-to-r from-transparent via-violet-400/50 dark:via-violet-400/40 to-transparent -translate-x-full md:group-hover:translate-x-full transition-transform duration-1000 ease-in-out" />
+                  <div className="h-full p-6 md:p-8 rounded-3xl bg-white/45 dark:bg-white/[0.035] backdrop-blur-xl border border-white/60 dark:border-white/10 md:group-hover:border-violet-400/40 dark:md:group-hover:border-violet-500/30 transition-all duration-500 flex flex-col justify-center relative overflow-hidden shadow-[0_8px_30px_rgba(28,26,23,0.04),inset_0_1px_1px_rgba(255,255,255,0.8)] dark:shadow-[0_8px_30px_rgba(0,0,0,0.4),inset_0_1px_1px_rgba(255,255,255,0.06)] hover:bg-white/60 dark:hover:bg-white/[0.06]">
+                    <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/80 dark:via-white/15 to-transparent pointer-events-none" />
+                    <div className="absolute top-0 left-0 w-[200%] h-px bg-gradient-to-r from-transparent via-violet-400/25 dark:via-violet-400/20 to-transparent -translate-x-full md:group-hover:translate-x-full transition-transform duration-1000 ease-in-out pointer-events-none" />
+                    
+                    {/* Subtle violet corner splash */}
+                    <div className="absolute -top-10 -right-10 w-36 h-36 rounded-full bg-violet-500/10 dark:bg-violet-500/15 blur-2xl pointer-events-none opacity-50 group-hover:opacity-100 transition-opacity duration-500" />
 
-                    <span className="text-[10px] md:text-xs uppercase tracking-[0.2em] font-bold text-violet-600/80 dark:text-violet-400/70 mb-4 inline-flex items-center gap-2">
-                      <div className="w-1.5 h-1.5 rounded-full bg-violet-500 shadow-[0_0_10px_rgba(139,92,246,0.8)]" />
+                    <span className="text-[10px] md:text-xs uppercase tracking-[0.2em] font-bold text-violet-600/90 dark:text-violet-400/80 mb-4 inline-flex items-center gap-2 relative z-10">
+                      <div className="w-1.5 h-1.5 rounded-full bg-violet-500 shadow-[0_0_6px_rgba(139,92,246,0.5)]" />
                       The Resolution
                     </span>
-                    <p className="text-base md:text-lg lg:text-2xl text-stone-900 dark:text-white font-bold leading-tight md:leading-snug tracking-tight">
+                    <p className="text-base md:text-lg lg:text-2xl text-stone-900 dark:text-white font-bold leading-tight md:leading-snug tracking-tight relative z-10">
                       {item.solution}
                     </p>
                   </div>

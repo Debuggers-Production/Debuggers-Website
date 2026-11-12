@@ -12,7 +12,6 @@ const bentoItems = [
     icon: Layers,
     colSpan: 'md:col-span-2',
     rowSpan: 'md:row-span-1',
-    metric: '150+ Sites Built',
     tag: 'Full-Stack',
     accentColor: 'from-blue-500/10 to-blue-600/5',
     borderHover: 'hover:border-blue-200 dark:hover:border-blue-500/20',
@@ -26,7 +25,6 @@ const bentoItems = [
     icon: PenTool,
     colSpan: 'md:col-span-1',
     rowSpan: 'md:row-span-1',
-    metric: '200+ Screens',
     tag: 'Design',
     accentColor: 'from-fuchsia-500/10 to-pink-600/5',
     borderHover: 'hover:border-fuchsia-200 dark:hover:border-fuchsia-500/20',
@@ -40,7 +38,6 @@ const bentoItems = [
     icon: CloudCog,
     colSpan: 'md:col-span-1',
     rowSpan: 'md:row-span-2',
-    metric: '99.9% Uptime',
     tag: 'Infrastructure',
     accentColor: 'from-sky-500/10 to-cyan-600/5',
     borderHover: 'hover:border-sky-200 dark:hover:border-sky-500/20',
@@ -48,13 +45,12 @@ const bentoItems = [
   },
   {
     id: 4,
-    title: 'Mobile Apps',
+    title: 'Mobile & Desktop Apps',
     slug: 'mobile-apps',
-    desc: 'Custom iOS and Android applications to help you reach customers anywhere.',
+    desc: 'Custom iOS, Android, and desktop applications to help you reach customers anywhere.',
     icon: Smartphone,
     colSpan: 'md:col-span-1',
     rowSpan: 'md:row-span-1',
-    metric: 'iOS & Android',
     tag: 'Cross-Platform',
     accentColor: 'from-emerald-500/10 to-green-600/5',
     borderHover: 'hover:border-emerald-200 dark:hover:border-emerald-500/20',
@@ -68,7 +64,6 @@ const bentoItems = [
     icon: ShieldCheck,
     colSpan: 'md:col-span-1',
     rowSpan: 'md:row-span-1',
-    metric: 'OWASP Certified',
     tag: 'Security',
     accentColor: 'from-red-500/10 to-rose-600/5',
     borderHover: 'hover:border-red-200 dark:hover:border-red-500/20',
@@ -82,7 +77,6 @@ const bentoItems = [
     icon: BrainCircuit,
     colSpan: 'md:col-span-2',
     rowSpan: 'md:row-span-1',
-    metric: 'GPT-4 Powered',
     tag: 'AI & ML',
     accentColor: 'from-violet-500/10 to-purple-600/5',
     borderHover: 'hover:border-violet-200 dark:hover:border-violet-500/20',
@@ -92,7 +86,7 @@ const bentoItems = [
 
 export default function Services() {
   return (
-    <section className="w-full bg-[#f0ede8] dark:bg-black py-20 sm:py-28 px-4 sm:px-6 relative z-10 transition-colors duration-300">
+    <section className="w-full bg-[#eaedf2] dark:bg-black py-20 sm:py-28 px-4 sm:px-6 relative z-10 transition-colors duration-300">
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-20 gap-8">
           <motion.div
@@ -102,23 +96,20 @@ export default function Services() {
             transition={{ duration: 0.8 }}
             className="max-w-2xl"
           >
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-stone-200 dark:bg-white/5 border border-stone-300 dark:border-white/10 text-stone-500 dark:text-neutral-500 text-xs font-bold tracking-widest uppercase mb-4">
-              <span className="w-1.5 h-1.5 rounded-full bg-violet-500" />
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-300/60 dark:bg-white/5 border border-slate-300 dark:border-white/10 text-slate-600 dark:text-neutral-400 text-xs font-bold tracking-widest uppercase mb-4">
               What We Do
             </div>
-            <h2 className="text-4xl md:text-6xl font-extrabold text-stone-900 dark:text-white tracking-tight mb-5">Our IT Services.</h2>
-            <p className="text-stone-500 dark:text-neutral-400 text-lg md:text-xl font-light leading-relaxed">
+            <h2 className="text-4xl md:text-6xl font-extrabold text-slate-900 dark:text-white tracking-tight mb-5">Our IT Services.</h2>
+            <p className="text-slate-600 dark:text-neutral-400 text-lg md:text-xl font-light leading-relaxed">
               We provide everything your business needs to succeed in the digital world. From design to security, we have you covered.
             </p>
           </motion.div>
-          <motion.button
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            className="hidden md:flex items-center gap-2 px-6 py-3 border border-stone-300 dark:border-white/20 rounded-full text-stone-700 dark:text-white text-sm font-semibold hover:bg-stone-900 dark:hover:bg-white hover:text-white dark:hover:text-black hover:border-stone-900 dark:hover:border-white transition-all duration-300"
+          <Link
+            to="/case-studies/"
+            className="hidden md:flex items-center gap-2 px-6 py-3 border border-slate-300 dark:border-white/20 rounded-full text-slate-800 dark:text-white text-sm font-semibold hover:bg-slate-900 dark:hover:bg-white hover:text-white dark:hover:text-black hover:border-slate-900 dark:hover:border-white transition-all duration-300"
           >
-            View All Services <ArrowUpRight className="w-4 h-4" />
-          </motion.button>
+            View Case Studies <ArrowUpRight className="w-4 h-4" />
+          </Link>
         </div>
 
         {/* Bento Grid */}
@@ -137,36 +128,34 @@ export default function Services() {
                   viewport={{ once: true }}
                   transition={{ duration: 0.6, delay: index * 0.1 }}
                   whileHover={{ scale: 0.98 }}
-                  className={`relative group p-6 sm:p-8 md:p-10 rounded-2xl sm:rounded-3xl bg-[#faf8f5] dark:bg-white/3 border border-stone-200 dark:border-white/10 ${service.borderHover} dark:hover:border-white/20 backdrop-blur-2xl overflow-hidden flex flex-col justify-between transition-all duration-500 cursor-pointer h-full shadow-[0_2px_16px_rgba(28,26,23,0.06)] dark:shadow-none hover:shadow-[0_8px_30px_rgba(28,26,23,0.1)] dark:hover:shadow-none`}
+                  className={`relative group p-6 sm:p-8 md:p-10 rounded-2xl sm:rounded-3xl bg-white/45 dark:bg-white/[0.035] backdrop-blur-xl border border-white/70 dark:border-white/10 ${service.borderHover} dark:hover:border-white/25 overflow-hidden flex flex-col justify-between transition-all duration-300 cursor-pointer h-full shadow-[0_8px_30px_rgba(28,26,23,0.04),inset_0_1px_1px_rgba(255,255,255,0.9)] dark:shadow-[0_8px_30px_rgba(0,0,0,0.5),inset_0_1px_1px_rgba(255,255,255,0.08)] hover:bg-white/65 dark:hover:bg-white/[0.06] hover:shadow-[0_16px_40px_rgba(93,114,204,0.12),inset_0_1px_1px_rgba(255,255,255,1)] dark:hover:shadow-[0_16px_40px_rgba(0,0,0,0.7),inset_0_1px_1px_rgba(255,255,255,0.15)]`}
                 >
                   {/* Accent gradient hover */}
                   <div className={`absolute inset-0 bg-gradient-to-br ${service.accentColor} opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none`} />
 
-                  {/* Top row: icon + tag */}
-                  <div className="relative z-10 flex items-start justify-between">
-                    <div className={`w-13 h-13 rounded-2xl bg-stone-100 dark:bg-black border border-stone-200 dark:border-white/15 flex items-center justify-center group-hover:border-stone-300 dark:group-hover:border-white/40 transition-colors duration-500`} style={{ width: '52px', height: '52px' }}>
-                      <Icon className={`w-6 h-6 ${service.iconColor}`} />
+                  {/* Top row: icon + tag on left, navigation button on right */}
+                  <div className="relative z-10 flex items-center justify-between gap-3">
+                    <div className="flex items-center gap-3 min-w-0">
+                      <div className="w-13 h-13 rounded-2xl bg-white/60 dark:bg-white/5 border border-white/80 dark:border-white/15 backdrop-blur-md flex items-center justify-center group-hover:border-stone-300 dark:group-hover:border-white/35 transition-colors duration-300 shadow-[inset_0_1px_0_rgba(255,255,255,0.8)] dark:shadow-none shrink-0" style={{ width: '52px', height: '52px' }}>
+                        <Icon className={`w-6 h-6 ${service.iconColor}`} />
+                      </div>
+                      <span className="px-3 py-1 rounded-full text-[10px] font-black tracking-widest uppercase text-stone-600 dark:text-neutral-400 bg-white/50 dark:bg-white/5 border border-white/70 dark:border-white/10 backdrop-blur-sm shadow-[inset_0_1px_0_rgba(255,255,255,0.6)] dark:shadow-none truncate">
+                        {service.tag}
+                      </span>
                     </div>
-                    <span className="px-3 py-1 rounded-full text-[10px] font-black tracking-widest uppercase text-stone-500 dark:text-neutral-500 bg-stone-100 dark:bg-white/5 border border-stone-200 dark:border-white/10">
-                      {service.tag}
-                    </span>
+
+                    <div className="w-10 h-10 rounded-full bg-stone-900 dark:bg-white text-white dark:text-black flex items-center justify-center opacity-0 -translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 shadow-lg shrink-0">
+                      <ArrowUpRight className="w-5 h-5" />
+                    </div>
                   </div>
 
                   <div className="relative z-10 mt-auto">
                     <h3 className="text-2xl md:text-3xl font-bold text-stone-900 dark:text-white mb-2 tracking-tight">
                       {service.title}
                     </h3>
-                    <p className="text-stone-500 dark:text-neutral-400 font-light leading-relaxed max-w-md text-sm md:text-base mb-3">
+                    <p className="text-stone-500 dark:text-neutral-400 font-light leading-relaxed max-w-md text-sm md:text-base">
                       {service.desc}
                     </p>
-                    <span className="inline-flex items-center gap-1.5 text-xs font-bold text-stone-400 dark:text-neutral-500 tracking-wide">
-                      <span className="w-1.5 h-1.5 rounded-full bg-stone-400 dark:bg-neutral-600" />
-                      {service.metric}
-                    </span>
-                  </div>
-
-                  <div className="absolute top-8 right-8 w-10 h-10 rounded-full bg-stone-900 dark:bg-white text-white dark:text-black flex items-center justify-center opacity-0 -translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 shadow-lg">
-                    <ArrowUpRight className="w-5 h-5" />
                   </div>
                 </motion.div>
               </Link>
