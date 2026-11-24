@@ -20,6 +20,7 @@ const ContactPage = lazy(() => import('./pages/ContactPage'));
 const PrivacyPolicyPage = lazy(() => import('./pages/PrivacyPolicyPage'));
 const TermsPage = lazy(() => import('./pages/TermsPage'));
 const DisclaimerPage = lazy(() => import('./pages/DisclaimerPage'));
+const FaqPage = lazy(() => import('./pages/FaqPage'));
 const BlogListPage = lazy(() => import('./pages/BlogListPage'));
 const BlogDetailPage = lazy(() => import('./pages/BlogDetailPage'));
 const CaseStudiesPage = lazy(() => import('./pages/CaseStudiesPage'));
@@ -121,6 +122,8 @@ function App() {
             <Route path="/terms-and-conditions/" element={<TermsPage />} />
             <Route path="/disclaimer" element={<DisclaimerPage />} />
             <Route path="/disclaimer/" element={<DisclaimerPage />} />
+            <Route path="/faq" element={<FaqPage />} />
+            <Route path="/faq/" element={<FaqPage />} />
             <Route path="/blog" element={<BlogListPage />} />
             <Route path="/blog/" element={<BlogListPage />} />
             <Route path="/blog/:slug" element={<BlogDetailPage />} />

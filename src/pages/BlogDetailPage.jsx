@@ -70,7 +70,7 @@ export default function BlogDetailPage() {
   return (
     <PageLayout maxWidth="max-w-6xl">
       <SeoHead
-        title={`${article.title} | Debuggers Technologies Blog`}
+        title={`${article.title} | Debuggers Technologies`}
         description={article.summary}
         keywords={article.keywords}
         path={`/blog/${article.slug}`}
