@@ -31,6 +31,8 @@ RUN printf 'server {\n\
     server_name localhost;\n\
     root /usr/share/nginx/html;\n\
     index index.html;\n\
+    port_in_redirect off;\n\
+    absolute_redirect off;\n\
 \n\
     # Gzip Compression\n\
     gzip on;\n\

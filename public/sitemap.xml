@@ -43,25 +43,25 @@
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://debuggerstechnologies.com/case-studies/menukit</loc>
+    <loc>https://debuggerstechnologies.com/case-studies/menukit/</loc>
     <lastmod>2026-11-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://debuggerstechnologies.com/case-studies/dauth</loc>
+    <loc>https://debuggerstechnologies.com/case-studies/dauth/</loc>
     <lastmod>2026-11-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://debuggerstechnologies.com/case-studies/dwise</loc>
+    <loc>https://debuggerstechnologies.com/case-studies/dwise/</loc>
     <lastmod>2026-11-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://debuggerstechnologies.com/case-studies/subakarya</loc>
+    <loc>https://debuggerstechnologies.com/case-studies/subakarya/</loc>
     <lastmod>2026-11-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
@@ -73,127 +73,127 @@
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://debuggerstechnologies.com/blog/how-to-deploy-fastapi-on-ubuntu-vps-using-nginx</loc>
+    <loc>https://debuggerstechnologies.com/blog/how-to-deploy-fastapi-on-ubuntu-vps-using-nginx/</loc>
     <lastmod>2026-10-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://debuggerstechnologies.com/blog/postgresql-vs-mongodb-when-should-developers-use-each</loc>
+    <loc>https://debuggerstechnologies.com/blog/postgresql-vs-mongodb-when-should-developers-use-each/</loc>
     <lastmod>2026-09-12</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://debuggerstechnologies.com/blog/understanding-docker-networking-between-multiple-containers</loc>
+    <loc>https://debuggerstechnologies.com/blog/understanding-docker-networking-between-multiple-containers/</loc>
     <lastmod>2026-10-15</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://debuggerstechnologies.com/blog/building-jwt-authentication-using-fastapi</loc>
+    <loc>https://debuggerstechnologies.com/blog/building-jwt-authentication-using-fastapi/</loc>
     <lastmod>2026-09-26</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://debuggerstechnologies.com/blog/deploying-multiple-microservices-on-a-single-vps</loc>
+    <loc>https://debuggerstechnologies.com/blog/deploying-multiple-microservices-on-a-single-vps/</loc>
     <lastmod>2026-10-03</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://debuggerstechnologies.com/blog/redis-caching-explained-with-real-python-examples</loc>
+    <loc>https://debuggerstechnologies.com/blog/redis-caching-explained-with-real-python-examples/</loc>
     <lastmod>2026-11-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://debuggerstechnologies.com/blog/building-rest-apis-using-fastapi-and-sqlalchemy</loc>
+    <loc>https://debuggerstechnologies.com/blog/building-rest-apis-using-fastapi-and-sqlalchemy/</loc>
     <lastmod>2026-10-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://debuggerstechnologies.com/blog/securing-an-ubuntu-vps-using-ufw-and-ssh</loc>
+    <loc>https://debuggerstechnologies.com/blog/securing-an-ubuntu-vps-using-ufw-and-ssh/</loc>
     <lastmod>2026-10-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://debuggerstechnologies.com/blog/understanding-nginx-reverse-proxy-configuration</loc>
+    <loc>https://debuggerstechnologies.com/blog/understanding-nginx-reverse-proxy-configuration/</loc>
     <lastmod>2026-10-31</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://debuggerstechnologies.com/blog/building-scalable-backend-architectures</loc>
+    <loc>https://debuggerstechnologies.com/blog/building-scalable-backend-architectures/</loc>
     <lastmod>2026-11-07</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://debuggerstechnologies.com/blog/getting-started-with-flutter-building-your-first-cross-platform-app</loc>
+    <loc>https://debuggerstechnologies.com/blog/getting-started-with-flutter-building-your-first-cross-platform-app/</loc>
     <lastmod>2026-11-14</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://debuggerstechnologies.com/blog/understanding-oauth2-and-openid-connect-for-modern-web-apps</loc>
+    <loc>https://debuggerstechnologies.com/blog/understanding-oauth2-and-openid-connect-for-modern-web-apps/</loc>
     <lastmod>2026-11-17</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://debuggerstechnologies.com/blog/ci-cd-pipeline-with-github-actions-for-fastapi-docker-projects</loc>
+    <loc>https://debuggerstechnologies.com/blog/ci-cd-pipeline-with-github-actions-for-fastapi-docker-projects/</loc>
     <lastmod>2026-11-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://debuggerstechnologies.com/blog/complete-guide-to-websocket-real-time-communication-with-fastapi</loc>
+    <loc>https://debuggerstechnologies.com/blog/complete-guide-to-websocket-real-time-communication-with-fastapi/</loc>
     <lastmod>2026-11-21</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://debuggerstechnologies.com/blog/database-indexing-strategies-when-and-how-to-index-postgresql-tables</loc>
+    <loc>https://debuggerstechnologies.com/blog/database-indexing-strategies-when-and-how-to-index-postgresql-tables/</loc>
     <lastmod>2026-11-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://debuggerstechnologies.com/services/web-development</loc>
+    <loc>https://debuggerstechnologies.com/services/web-development/</loc>
     <lastmod>2026-11-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://debuggerstechnologies.com/services/ui-ux-design</loc>
+    <loc>https://debuggerstechnologies.com/services/ui-ux-design/</loc>
     <lastmod>2026-11-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://debuggerstechnologies.com/services/cloud-devops</loc>
+    <loc>https://debuggerstechnologies.com/services/cloud-devops/</loc>
     <lastmod>2026-11-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://debuggerstechnologies.com/services/mobile-apps</loc>
+    <loc>https://debuggerstechnologies.com/services/mobile-apps/</loc>
     <lastmod>2026-11-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://debuggerstechnologies.com/services/cyber-security</loc>
+    <loc>https://debuggerstechnologies.com/services/cyber-security/</loc>
     <lastmod>2026-11-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://debuggerstechnologies.com/services/artificial-intelligence</loc>
+    <loc>https://debuggerstechnologies.com/services/artificial-intelligence/</loc>
     <lastmod>2026-11-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>

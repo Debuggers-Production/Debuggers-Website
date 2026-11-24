@@ -300,7 +300,7 @@ writeRouteHtml('/blog/', {
       <ul>
         ${blogArticles.map(a => `
           <li>
-            <a href="/blog/${a.slug}"><strong>${escapeHtml(a.title)}</strong></a>
+            <a href="/blog/${a.slug}/"><strong>${escapeHtml(a.title)}</strong></a>
             <p>${escapeHtml(a.summary)}</p>
           </li>
         `).join('')}
@@ -311,7 +311,7 @@ writeRouteHtml('/blog/', {
 
 // 12. All 15 Blog Articles (Dynamic Pre-rendering with individual titles and deep content!)
 for (const article of blogArticles) {
-  const articleUrl = `${SITE_URL}/blog/${article.slug}`;
+  const articleUrl = `${SITE_URL}/blog/${article.slug}/`;
 
   const sectionsHtml = article.sections.map(sec => `
     <section style="margin-bottom:28px;">

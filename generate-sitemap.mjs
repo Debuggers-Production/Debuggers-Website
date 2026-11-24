@@ -21,7 +21,7 @@ const routes = [
 // Add case studies
 for (const cs of caseStudies) {
   routes.push({
-    loc: `/case-studies/${cs.slug}`,
+    loc: `/case-studies/${cs.slug}/`,
     priority: '0.8',
     changefreq: 'monthly',
     lastmod: '2026-11-24',
@@ -34,7 +34,7 @@ routes.push({ loc: '/blog/', priority: '0.9', changefreq: 'weekly', lastmod: '20
 // Add all 15 blog articles with their specific updatedAt / publishedAt
 for (const article of blogArticles) {
   routes.push({
-    loc: `/blog/${article.slug}`,
+    loc: `/blog/${article.slug}/`,
     priority: '0.8',
     changefreq: 'monthly',
     lastmod: article.updatedAt || article.publishedAt,
@@ -52,7 +52,7 @@ const services = [
 ];
 for (const s of services) {
   routes.push({
-    loc: `/services/${s}`,
+    loc: `/services/${s}/`,
     priority: '0.8',
     changefreq: 'monthly',
     lastmod: '2026-11-24',
